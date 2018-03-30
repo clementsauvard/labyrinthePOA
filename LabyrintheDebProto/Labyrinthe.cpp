@@ -20,23 +20,14 @@ Environnement* Environnement::init (char* filename)
 
 Labyrinthe::Labyrinthe (char* filename)
 {
-	//vector< vector<char> > vec;
-	//std::ifstream fichier(filename);
-	//std::vector<char> laby(
-    //std::istream_iterator<char>(fichier),
-    //std::istream_iterator<char>{});
-
   //Variables
   string line;
   int widthLab = 0;
   int heightLab = 0;
   bool firstLigne = false;
-  bool boolCompteur = false;
   bool boolCompteur2 = false;
-  int startCompteur = 0;
   int startCompteur2 = 0;
   int startLaby = 0;
-  int lel = 0;
 
   int x2Mur;
   int y2Mur;
@@ -47,8 +38,6 @@ Labyrinthe::Labyrinthe (char* filename)
   static Wall affiches[20];
 
   _guards = new Mover* [100];
-
-  char labyrinthe2D[100][100];
 
   int nbWalls = 0;
   int nbAffiches = 0;
@@ -210,8 +199,6 @@ for(int j = 0; j < widthLab; j++)
 
     _nguards = nbGuards++;
     
-
-
 
 /*
 // les 4 murs.
