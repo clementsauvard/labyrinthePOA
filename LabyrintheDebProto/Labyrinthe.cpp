@@ -120,7 +120,6 @@ for(int i = 0; i < heightLab; i++)
 {
 	for (int j = 0; j < widthLab; j++){
   		char c = labyTab[i][j];
-    	char c2 = labyTab[i][j+1];
 
   		switch ( c )  
     	{  
@@ -142,7 +141,7 @@ for(int i = 0; i < heightLab; i++)
 	         	waitFinMur = false;
 	         	break;
 	     	case 'a':
-	     		if (c2 == '-' || c2 == 'a' || c2 == 'b' || c2 == '+' ){
+	     		if (waitFinMur){
 		     		affiches[nbAffiches] = {j, i, j+2,i,0};
 		     		nbAffiches++;
 	     		}
@@ -172,7 +171,6 @@ for(int j = 0; j < widthLab; j++)
 {
 	for (int i = 0; i < heightLab; i++){
   		char c = labyTab[i][j];
-  		char c2 = labyTab[i+1][j];
     
   		switch ( c )  
     	{  
@@ -192,7 +190,7 @@ for(int j = 0; j < widthLab; j++)
 	         	waitFinMur = false;
 	         	break;
 	     	case 'a':
-	     	if (c2 == '|' || c2 == 'a' || c2 == 'b' || c2 == '+'){
+	     	if (waitFinMur){
 	     		affiches[nbAffiches] = {j, i, j,i+2,0};
 	     		nbAffiches++;
 	     	}
