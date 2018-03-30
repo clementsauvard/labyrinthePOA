@@ -108,49 +108,61 @@ ifstream myfile2 ("labyrinthe.txt");
 for(int i = 0; i < heightLab; i++)
 {
 	for (int j = 0; j < widthLab; j++){
-  		char c = labyTab[i][j];
+        
+        _data [j][i] = 0;        
+        
+        char c = labyTab[i][j];
 
   		switch ( c )  
-    	{  
-        	case '+':
-	    		if (waitFinMur){
-	    	    walls[nbWalls] = {j,i,x2Mur,y2Mur,0};
-	    	    nbWalls++;
-	     	}
-	     	x2Mur = j;
-	     	y2Mur = i;
-	     	waitFinMur = true;
+        {  
+            case '+':
+                if (waitFinMur){
+                walls[nbWalls] = {j,i,x2Mur,y2Mur,0};
+                nbWalls++;
+            }
+            x2Mur = j;
+            y2Mur = i;
+            waitFinMur = true;
             break;  
-	         case '#':  
-	            getline(myfile,line);  
+             case '#':  
+                getline(myfile,line);  
 	            break;
 	         case '-':
-	         	break;
+                break;
 	         case ' ':
-	         	waitFinMur = false;
-	         	break;
+                waitFinMur = false;
+                break;
 	     	case 'a':
-	     		if (waitFinMur){
-		     		affiches[nbAffiches] = {j, i, j+2,i,0};
-		     		nbAffiches++;
-	     		}
-	     		break;
+                if (waitFinMur){
+                    affiches[nbAffiches] = {j, i, j+2,i,0};
+                    nbAffiches++;
+                }
+                break;
 	     	case 'x':
-	     		caisses[nbCaisses] = {j, i,0};
-	     		nbCaisses++;
-	     		break; 
+                _data [j][i] = 2;
+                caisses[nbCaisses] = {j, i,0};
+                nbCaisses++;
+                break; 
 	     	case 'C':
-	     		_guards[0] = new Chasseur (this);
-	     		_guards [0] -> _x = (float)j*10.; 
-	     		_guards [0] -> _y = (float)i*10.;
-	     		break;
+                _guards[0] = new Chasseur (this);
+                _guards [0] -> _x = (float)j*scale; 
+                _guards [0] -> _y = (float)i*scale;
+                break;
 	      	case 'G':
-	     		_guards [nbGuards] = new Gardien (this, "Marvin");
-	     		_guards [nbGuards] -> _x = (float)j*10.;
-	     		_guards [nbGuards] -> _y = (float)i*10.;
-	     		nbGuards++;
-	     		break;		
+                _data [j][i] = 3;
+                _guards [nbGuards] = new Gardien (this, "Marvin");
+                _guards [nbGuards] -> _x = (float)j*scale;
+                _guards [nbGuards] -> _y = (float)i*scale;
+                nbGuards++;
+                break;
+            case 'T':
+                _data [j][i] = 4;
+                _treasor._x = j;
+                _treasor._y = i;
+                break;
 	    }  
+        if (waitFinMur)
+        {_data [j][i] = 1;}
 	}
 	waitFinMur=false;
 }
@@ -160,6 +172,7 @@ for(int j = 0; j < widthLab; j++)
 {
 	for (int i = 0; i < heightLab; i++){
   		char c = labyTab[i][j];
+        
     
   		switch ( c )  
     	{  
@@ -184,7 +197,11 @@ for(int j = 0; j < widthLab; j++)
 	     		nbAffiches++;
 	     	}
 	     		break;
-    	}  
+    	}
+        
+        if (waitFinMur)
+        {_data [j][i] = 1;}
+          
 	}
 }
 
