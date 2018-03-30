@@ -42,7 +42,7 @@ Labyrinthe::Labyrinthe (char* filename)
   int nbWalls = 0;
   int nbAffiches = 0;
   int nbCaisses = 0;
-  int nbGuards = 0;
+  int nbGuards = 1;
 
   // Ouverture du fichier
   ifstream myfile ("labyrinthe.txt");
@@ -117,13 +117,13 @@ for(int i = 0; i < heightLab; i++)
         {  
             case '+':
                 if (waitFinMur){
-                walls[nbWalls] = {j,i,x2Mur,y2Mur,0};
-                nbWalls++;
-            }
-            x2Mur = j;
-            y2Mur = i;
-            waitFinMur = true;
-            break;  
+	                walls[nbWalls] = {j,i,x2Mur,y2Mur,0};
+	                nbWalls++;
+	            }
+	            x2Mur = j;
+	            y2Mur = i;
+	            waitFinMur = true;
+            	break;  
              case '#':  
                 getline(myfile,line);  
 	            break;
@@ -178,9 +178,9 @@ for(int j = 0; j < widthLab; j++)
     	{  
         	case '+':
 	    		if (waitFinMur){
-	    	    walls[nbWalls] = {j,i,x2Mur,y2Mur,0};
-	    	    nbWalls++;
-	     	}
+		    	    walls[nbWalls] = {j,i,x2Mur,y2Mur,0};
+		    	    nbWalls++;
+		     	}
 		     	x2Mur = j;
 		     	y2Mur = i;
 		     	waitFinMur = true;
