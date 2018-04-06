@@ -6,6 +6,10 @@
 #include <fstream>
 #include <vector>
 #include <iterator>
+#include <stack>
+
+using namespace std;
+
 using namespace std;
 
 Sound*	Chasseur::_hunter_fire;	// bruit de l'arme du chasseur.
@@ -16,6 +20,7 @@ Environnement* Environnement::init (char* filename)
 {
 	return new Labyrinthe (filename);
 }
+
 
 
 Labyrinthe::Labyrinthe (char* filename)
@@ -144,19 +149,20 @@ for(int i = 0; i < heightLab; i++)
                 nbCaisses++;
                 break; 
 	     	case 'C':
+                _data [j][i] = 5;
                 _guards[0] = new Chasseur (this);
                 _guards [0] -> _x = (float)j*scale; 
                 _guards [0] -> _y = (float)i*scale;
                 break;
 	      	case 'G':
-                _data [j][i] = 3;
+                _data [j][i] = 4;
                 _guards [nbGuards] = new Gardien (this, "Marvin");
                 _guards [nbGuards] -> _x = (float)j*scale;
                 _guards [nbGuards] -> _y = (float)i*scale;
                 nbGuards++;
                 break;
             case 'T':
-                _data [j][i] = 4;
+                _data [j][i] = 3;
                 _treasor._x = j;
                 _treasor._y = i;
                 break;
@@ -204,6 +210,78 @@ for(int j = 0; j < widthLab; j++)
           
 	}
 }
+
+
+
+
+int distTab[heightLab][widthLab];
+
+for(int j = 0; j < heightLab; j++)
+{
+    for (int i = 0; i < widthLab; i++){
+        distTab[j][i]=-1;
+    }
+}
+
+bool done=false;
+int cpt=0;
+stack< pair <int,int> > i;
+i.push(make_pair (_treasor._y,_treasor._x));
+    pair <int,int> x;
+
+while(!done)
+{
+    
+    x=i.top();
+    cout << "1 : " << x.first << " " << x.second  << " " << distTab[x.first][x.second] << " "<< (int)_data [x.first][x.second] <<endl;
+    i.pop();
+    
+    distTab[x.first][x.second]=cpt;
+
+    if((int)_data [x.first][x.second+1] == 0 || (int)_data [x.first][x.second+1] >= 4 ) {
+        if(distTab[x.first][x.second+1] == -1 || cpt < distTab[x.first][x.second+1]  )
+            i.push(make_pair (x.first,x.second+1));
+    }
+
+    if((int)_data [x.first+1][x.second] == 0 || (int)_data [x.first+1][x.second] >= 4 ) {
+        if(distTab[x.first+1][x.second] == -1 || cpt < distTab[x.first+1][x.second]  )
+            i.push(make_pair (x.first+1,x.second));
+    }
+/*    
+    if(_data [x.first-1][x.second] == 0 || _data [x.first-1][x.second] >= 4 ) {
+        if(distTab[x.first-1][x.second] == -1 || cpt < distTab[x.first-1][x.second]  )
+            i.push(make_pair (x.first-1,x.second));
+    }
+    */
+    
+    /*
+    if(_data [x.first][x.second-1] == 0 || _data [x.first][x.second-1] >= 4 ) {
+        if(distTab[x.first][x.second-1] == -1 || cpt < distTab[x.first][x.second-1]  )
+            i.push(make_pair (x.first,x.second-1));
+    }
+*/
+    cout << "Le nombre d'éléments de la pile est : " << i.size() << endl;
+    
+    
+    
+    cpt++;
+    if(i.empty()){
+        done=true;
+    }
+    
+}
+
+for(int j = 0; j < heightLab; j++)
+{
+    for (int i = 0; i < widthLab; i++){
+        if (distTab[j][i]== -1){cout << "#";}
+        else{ 
+            if(distTab[j][i]== 0){cout << "O";}
+            else {cout << ".";}}
+    }
+    cout << endl;
+}
+
 
 	_nwall = nbWalls;
     _walls = walls;
