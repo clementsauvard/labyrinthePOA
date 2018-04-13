@@ -210,6 +210,7 @@ for(int j = 0; j < widthLab; j++)
           
 	}
 }
+<<<<<<< Updated upstream
 
 
 
@@ -283,6 +284,8 @@ for(int j = 0; j < heightLab; j++)
 }
 
 
+=======
+>>>>>>> Stashed changes
 	_nwall = nbWalls;
     _walls = walls;
 
