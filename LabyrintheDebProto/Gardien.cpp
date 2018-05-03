@@ -11,7 +11,7 @@ Gardien::Gardien (Labyrinthe* l,const char* modele) : Mover (100, 80, l, modele)
 }
 
 void Gardien::update (void) {
-	cout << _l -> _nboxes << endl;
+	//cout << _l -> _nboxes << endl;
 	//move(1,1);
 }
 

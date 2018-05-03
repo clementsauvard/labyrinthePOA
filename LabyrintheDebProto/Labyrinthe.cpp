@@ -214,11 +214,11 @@ for(int j = 0; j < widthLab; j++)
 
 
 
-int distTab[heightLab][widthLab];
+int distTab[widthLab][heightLab];
 
-for(int j = 0; j < heightLab; j++)
+for(int j = 0; j < widthLab; j++)
 {
-    for (int i = 0; i < widthLab; i++){
+    for (int i = 0; i < heightLab; i++){
         distTab[j][i]=-1;
     }
 }
@@ -226,46 +226,79 @@ for(int j = 0; j < heightLab; j++)
 bool done=false;
 int cpt=0;
 stack< pair <int,int> > i;
-i.push(make_pair (_treasor._y,_treasor._x));
+i.push(make_pair (_treasor._x,_treasor._y));
     pair <int,int> x;
-
 while(!done)
 {
-    
+
+
     x=i.top();
-    cout << "1 : " << x.first << " 2 : " << x.second  << " tab : " << distTab[x.first][x.second] << " data : " << (int)_data [x.first][x.second] <<endl;
+    if(x.second + 1 <= widthLab && distTab[x.first][x.second+1] >-1 )
+      {cpt= min(cpt,distTab[x.first][x.second+1]+1);}
+    if(x.second - 1 <= widthLab && distTab[x.first][x.second-1] >-1 )
+      {cpt= min(cpt,distTab[x.first][x.second-1]+1);}
+    if(x.first + 1 <= widthLab && distTab[x.first+1][x.second] >-1 )
+      {cpt= min(cpt,distTab[x.first+1][x.second]+1);}
+    if(x.first - 1 <= widthLab && distTab[x.first-1][x.second] >-1 )
+      {cpt= min(cpt,distTab[x.first-1][x.second]+1);}
+    cout  << "X : " << x.second << " Y : " << x.first  << " tab : " << distTab[x.first][x.second] << " data : " << (int)_data [x.first][x.second] << "cpt : "<< cpt <<endl;
     i.pop();
     
     distTab[x.first][x.second]=cpt;
+    cout  << "tab2 : " << distTab[x.first][x.second] << " data : " << (int)_data [x.first][x.second] <<endl;
+    
 
     if((int)_data [x.first][x.second+1] == 0 || (int)_data [x.first][x.second+1] >= 4 ) {
-        if(distTab[x.first][x.second+1] == -1 || cpt < distTab[x.first][x.second+1]  )
-            i.push(make_pair (x.first,x.second+1));
+        if(distTab[x.first][x.second+1] == -1 || cpt+1 < distTab[x.first][x.second+1]  )
+        {
+            if(x.second+1 <= heightLab)
+            {
+                i.push(make_pair (x.first,x.second+1));
+            }
+        }
     }
 
-    if((int)_data [x.first+1][x.second] == 0 || (int)_data [x.first+1][x.second] >= 4 ) {
-        if(distTab[x.first+1][x.second] == -1 || cpt < distTab[x.first+1][x.second]  )
-            i.push(make_pair (x.first+1,x.second));
+    if((int)_data [x.first+1][x.second] == 0 || (int)_data [x.first+1][x.second] >= 4 ) 
+    {
+        if(distTab[x.first+1][x.second] == -1 || cpt+1 < distTab[x.first+1][x.second]  )
+        {
+            if(x.first+1 <= widthLab)
+            {
+                i.push(make_pair (x.first+1,x.second));
+            }
+        }
     }
-    /*
-    if(_data [x.first-1][x.second] == 0 || _data [x.first-1][x.second] >= 4 ) {
-        if(distTab[x.first-1][x.second] == -1 || cpt < distTab[x.first-1][x.second]  )
-            i.push(make_pair (x.first-1,x.second));
+
+
+    if((int)_data [x.first-1][x.second] == 0 || (int)_data [x.first-1][x.second] >= 4 ) 
+    {
+        if(distTab[x.first-1][x.second] == -1 || cpt+1 < distTab[x.first-1][x.second]  )
+        {
+            if(x.first-1 >= 0)
+            {
+               i.push(make_pair (x.first-1,x.second));
+            }
+        }
     }
     
-    
-    
-    if(_data [x.first][x.second-1] == 0 || _data [x.first][x.second-1] >= 4 ) {
-        if(distTab[x.first][x.second-1] == -1 || cpt < distTab[x.first][x.second-1]  )
-            i.push(make_pair (x.first,x.second-1));
+    if((int)_data [x.first][x.second-1] == 0 || (int)_data [x.first][x.second-1] >= 4 ) {
+        if(distTab[x.first][x.second-1] == -1 || cpt+1 < distTab[x.first][x.second-1]  )
+        { 
+            if(x.second-1 >= 0)
+            {
+              i.push(make_pair (x.first,x.second-1));
+            }
+        }
     }
-*/
+
     cout << "Le nombre d'éléments de la pile est : " << i.size() << endl;
     
     
     
     cpt++;
-    if(i.empty()){
+    if(i.empty()  
+       //|| i.size()>600
+      ){
         done=true;
     }
     
@@ -274,10 +307,13 @@ while(!done)
 for(int j = 0; j < heightLab; j++)
 {
     for (int i = 0; i < widthLab; i++){
-        if (distTab[j][i]== -1){cout << "#";}
+        
+        if (distTab[i][j]== -1){cout << "#";}
         else{ 
-            if(distTab[j][i]== 0){cout << "O";}
-            else {cout << ".";}}
+            if(distTab[i][j]== 0){cout << "O";}
+            else {cout <<  "." ;}}
+        
+        //cout <<(int)_data [i][j];
     }
     cout << endl;
 }
