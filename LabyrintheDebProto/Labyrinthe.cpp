@@ -210,7 +210,6 @@ for(int j = 0; j < widthLab; j++)
           
 	}
 }
-<<<<<<< Updated upstream
 
 
 
@@ -234,7 +233,7 @@ while(!done)
 {
     
     x=i.top();
-    cout << "1 : " << x.first << " " << x.second  << " " << distTab[x.first][x.second] << " "<< (int)_data [x.first][x.second] <<endl;
+    cout << "1 : " << x.first << " 2 : " << x.second  << " tab : " << distTab[x.first][x.second] << " data : " << (int)_data [x.first][x.second] <<endl;
     i.pop();
     
     distTab[x.first][x.second]=cpt;
@@ -248,14 +247,14 @@ while(!done)
         if(distTab[x.first+1][x.second] == -1 || cpt < distTab[x.first+1][x.second]  )
             i.push(make_pair (x.first+1,x.second));
     }
-/*    
+    /*
     if(_data [x.first-1][x.second] == 0 || _data [x.first-1][x.second] >= 4 ) {
         if(distTab[x.first-1][x.second] == -1 || cpt < distTab[x.first-1][x.second]  )
             i.push(make_pair (x.first-1,x.second));
     }
-    */
     
-    /*
+    
+    
     if(_data [x.first][x.second-1] == 0 || _data [x.first][x.second-1] >= 4 ) {
         if(distTab[x.first][x.second-1] == -1 || cpt < distTab[x.first][x.second-1]  )
             i.push(make_pair (x.first,x.second-1));
@@ -283,9 +282,6 @@ for(int j = 0; j < heightLab; j++)
     cout << endl;
 }
 
-
-=======
->>>>>>> Stashed changes
 	_nwall = nbWalls;
     _walls = walls;
 
