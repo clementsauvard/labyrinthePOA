@@ -26,22 +26,27 @@ void Gardien::update (void) {
 	int droite = reinterpret_cast<Labyrinthe*>(_l) -> dist(floor(_x/_l -> scale)+1,floor(_y/_l -> scale));
 	int bas = reinterpret_cast<Labyrinthe*>(_l) -> dist(floor(_x/_l -> scale),floor(_y/_l -> scale)+1);
 
-	cout << "haut : " << haut << " bas : " << bas << " droite : " << droite << " gauche : " << gauche << endl;
-	cout << "x : " << (_x/_l -> scale)<< " y : " << _y/_l -> scale << endl;
+	//cout << "haut : " << haut << " bas : " << bas << " droite : " << droite << " gauche : " << gauche << endl;
+	//cout << "x : " << (_x/_l -> scale)<< " y : " << _y/_l -> scale << endl;
 	if (haut == -1){
 		haut = INT_MAX;
+		cout << "haut "<< endl;
 	}
 	if (bas == -1){
 		bas = INT_MAX;
+		cout << "bas "<< endl;
 	}
 	if (droite == -1){
 		droite = INT_MAX;
+		cout << "droite "<< endl;
 	}
 	if (gauche == -1){
 		gauche = INT_MAX;
+		cout << "gquche "<< endl;
 	}
 
-	vector<pair<double,double>> tempDir;
+
+	vector<pair<int,int> > tempDir;
 
 	int temp = min(min(min(haut,gauche),droite),bas);
 	
@@ -64,7 +69,8 @@ void Gardien::update (void) {
 	}
 /*
 	for (int i = 0; i < tempDir.size(); i++){
-		cout << "x : " << tempDir[i].first << " y : " << tempDir[i].second << endl;
+		cout << "x : " << tempDir[i].first << endl;
+		cout << "y : " << tempDir[i].second << endl;
 	}
 	*/
 	if (tempDir.size() >= 1){
@@ -83,17 +89,17 @@ void Gardien::update (void) {
 		move(tempDir[0].first,tempDir[0].second);
 		
 	}
-	
 }
 
 bool Gardien::move (double dx, double dy) {
-	reinterpret_cast<Labyrinthe*>(_l) -> setData (round(_x/_l -> scale),round(_y/_l -> scale),0);
-	cout << _x << endl;
-
+	if( (int) reinterpret_cast<Labyrinthe*>(_l) -> data (ceil(_x/_l -> scale)+dx,ceil(_y/_l -> scale)+dy) != 4  )
+	{	
+	reinterpret_cast<Labyrinthe*>(_l) -> setData (ceil(_x/_l -> scale),ceil(_y/_l -> scale),0);
+	cout << (int) reinterpret_cast<Labyrinthe*>(_l) -> data (ceil(_x/_l -> scale)+dx,ceil(_y/_l -> scale)+dy) << endl;
 	_x += dx;
 	_y += dy;
-
-	reinterpret_cast<Labyrinthe*>(_l) -> setData (round(_x/_l -> scale),round(_y/_l -> scale),4);
+	reinterpret_cast<Labyrinthe*>(_l) -> setData (ceil(_x/_l -> scale),ceil(_y/_l -> scale),4);
+	}
 	return true;
 }
 
