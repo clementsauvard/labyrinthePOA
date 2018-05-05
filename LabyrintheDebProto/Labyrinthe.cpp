@@ -109,10 +109,8 @@ cout << "size h:"<< heightLab <<" et w:" << widthLab << endl;
 
 //Parcours du fichier et copie du labrinthe dans le tableau 2D
 ifstream myfile2 (filename);
-cout << "size1 h:"<< heightLab <<" et w:" << widthLab << endl;
   if (myfile2.is_open())
   {
-    cout << "size2 h:"<< heightLab <<" et w:" << widthLab << endl;
     while ( myfile2.good() )
     {
     	getline (myfile2,line);
@@ -131,24 +129,16 @@ cout << "size1 h:"<< heightLab <<" et w:" << widthLab << endl;
 		   	 labyTab[startCompteur2][i] = line[i];
 		   }
 		}
-    cout << "size4 h:"<< heightLab <<" et w:" << widthLab << endl;
     }
     myfile2.close();
 }
-
-cout << "4  " << endl;
-cout << "size h:"<< heightLab <<" et w:" << widthLab << endl;
 
 // 1ere boucle pour la création des murs horizontaux, du chasseur, des gardiens, des affiches
 for(int i = 0; i < heightLab; i++)
 {
 	for (int j = 0; j < widthLab; j++){
-        cout << "4.2  j: "<< j << "/" << widthLab  << " i: "<< i <<"/" << heightLab << endl;
         _data [j][i] = 0;        
- 
-        cout << "4.25 : "<< j << endl;        
         char c = labyTab[i][j];
-        cout << "4.3 : "<< j << endl;
   		switch ( c )  
         {  
             case '+':
@@ -194,8 +184,8 @@ for(int i = 0; i < heightLab; i++)
                 break;
             case 'T':
                 _data [j][i] = 3;
-                _treasor._x = j;
-                _treasor._y = i;
+                _treasor._x =j;
+                _treasor._y =i;
                 break;
 	    }  
         if (waitFinMur)

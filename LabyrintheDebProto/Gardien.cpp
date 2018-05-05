@@ -5,6 +5,7 @@
 #include <iostream>
 #include <vector>
 #include <limits.h>
+#include <math.h>
 
 using namespace std;
 
@@ -20,11 +21,13 @@ void Gardien::update (void) {
 	//cout << "lol" <<  reinterpret_cast<Labyrinthe*>(_l) -> dist(_x/_l -> scale,_y/_l -> scale) << endl;
 
 
-	int haut = reinterpret_cast<Labyrinthe*>(_l) -> dist((_x/_l -> scale),(_y/_l -> scale)-1);
-	int gauche = reinterpret_cast<Labyrinthe*>(_l) -> dist((_x/_l -> scale)-1,(_y/_l -> scale));
-	int droite = reinterpret_cast<Labyrinthe*>(_l) -> dist((_x/_l -> scale)+1,(_y/_l -> scale));
-	int bas = reinterpret_cast<Labyrinthe*>(_l) -> dist((_x/_l -> scale),(_y/_l -> scale)+1);
+	int haut = reinterpret_cast<Labyrinthe*>(_l) -> dist(round(_x/_l -> scale),round(_y/_l -> scale)-1);
+	int gauche = reinterpret_cast<Labyrinthe*>(_l) -> dist(round(_x/_l -> scale)-1,round(_y/_l -> scale));
+	int droite = reinterpret_cast<Labyrinthe*>(_l) -> dist(round(_x/_l -> scale)+1,round(_y/_l -> scale));
+	int bas = reinterpret_cast<Labyrinthe*>(_l) -> dist(round(_x/_l -> scale),round(_y/_l -> scale)+1);
 
+	cout << "haut : " << haut << " bas : " << bas << " droite : " << droite << " gauche : " << gauche << endl;
+	cout << "x : " << (_x/_l -> scale)<< " y : " << _y/_l -> scale << endl;
 	if (haut == -1){
 		haut = INT_MAX;
 	}
@@ -42,23 +45,28 @@ void Gardien::update (void) {
 
 	int temp = min(min(min(haut,gauche),droite),bas);
 	
+	//cout << " temp : " << temp << endl;
+
 	if (temp == haut && temp != 0){
 		tempDir.push_back(make_pair(0,-1));
 	}
 	if (temp == bas && temp != 0){
-		tempDir.push_back(make_pair(0,+1));
+		tempDir.push_back(make_pair(0,1));
 	}
 	if (temp == droite && temp != 0){
-		tempDir.push_back(make_pair(+1,0));
+		tempDir.push_back(make_pair(1,0));
 	}
 	if (temp == gauche && temp != 0){
 		tempDir.push_back(make_pair(-1,0));
 	}
-
+	if (tempDir.size() == 0){
+		cout << "lol mdr" << endl;	
+	}
+/*
 	for (int i = 0; i < tempDir.size(); i++){
 		cout << "x : " << tempDir[i].first << " y : " << tempDir[i].second << endl;
 	}
-	
+	*/
 	if (tempDir.size() >= 1){
 		if (tempDir[0].first == 1){
 			_angle = 270;
@@ -73,15 +81,19 @@ void Gardien::update (void) {
 			_angle = 180;
 		}
 		move(tempDir[0].first,tempDir[0].second);
-		reinterpret_cast<Labyrinthe*>(_l) -> setData ((_x/_l -> scale),(_y/_l -> scale),4);
+		
 	}
 	
 }
 
 bool Gardien::move (double dx, double dy) {
-	reinterpret_cast<Labyrinthe*>(_l) -> setData ((_x/_l -> scale),(_y/_l -> scale),0);
+	reinterpret_cast<Labyrinthe*>(_l) -> setData (round(_x/_l -> scale),round(_y/_l -> scale),0);
+	cout << _x << endl;
+
 	_x += dx;
 	_y += dy;
+
+	reinterpret_cast<Labyrinthe*>(_l) -> setData (round(_x/_l -> scale),round(_y/_l -> scale),4);
 	return true;
 }
 
