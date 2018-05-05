@@ -8,6 +8,7 @@
 #include <iterator>
 #include <stack>
 
+#include <limits.h>
 #include <malloc.h>
 
 using namespace std;
@@ -27,6 +28,7 @@ Environnement* Environnement::init (char* filename)
 
 Labyrinthe::Labyrinthe (char* filename)
 {
+  cout << "1  " << endl;
   //Variables
   string line;
   int widthLab = 0;
@@ -50,6 +52,11 @@ Labyrinthe::Labyrinthe (char* filename)
   int nbAffiches = 0;
   int nbCaisses = 0;
   int nbGuards = 1;
+
+
+
+  cout << "2  " << endl;
+
 
   // Ouverture du fichier
   ifstream myfile (filename);
@@ -81,9 +88,15 @@ Labyrinthe::Labyrinthe (char* filename)
     myfile.close();
   }
 
+
+cout << "3  " << endl;
+
+
 setHeight(heightLab);
 setWidth(widthLab);
+
 cout << "size h:"<< heightLab <<" et w:" << widthLab << endl;
+
 _data = (char**)malloc(sizeof(char*) * widthLab);
  
 for (int i = 0; i < widthLab; i++)
@@ -92,10 +105,14 @@ _data[i] = (char*)malloc(sizeof(char) * heightLab);
 //Initialisation d'un tableau 2D
 char labyTab[heightLab][widthLab];
 
+cout << "size h:"<< heightLab <<" et w:" << widthLab << endl;
+
 //Parcours du fichier et copie du labrinthe dans le tableau 2D
 ifstream myfile2 (filename);
+cout << "size1 h:"<< heightLab <<" et w:" << widthLab << endl;
   if (myfile2.is_open())
   {
+    cout << "size2 h:"<< heightLab <<" et w:" << widthLab << endl;
     while ( myfile2.good() )
     {
     	getline (myfile2,line);
@@ -108,26 +125,30 @@ ifstream myfile2 (filename);
 	      }
 	   }
 	   if (boolCompteur2){
+      cout << "size3 h:"<< heightLab <<" et w:" << widthLab << endl;
     	for(std::string::size_type i = 0; i < line.length(); ++i)
 		   {
 		   	 labyTab[startCompteur2][i] = line[i];
 		   }
 		}
+    cout << "size4 h:"<< heightLab <<" et w:" << widthLab << endl;
     }
     myfile2.close();
 }
 
-
+cout << "4  " << endl;
+cout << "size h:"<< heightLab <<" et w:" << widthLab << endl;
 
 // 1ere boucle pour la création des murs horizontaux, du chasseur, des gardiens, des affiches
 for(int i = 0; i < heightLab; i++)
 {
 	for (int j = 0; j < widthLab; j++){
-        
+        cout << "4.2  j: "<< j << "/" << widthLab  << " i: "<< i <<"/" << heightLab << endl;
         _data [j][i] = 0;        
-        
+ 
+        cout << "4.25 : "<< j << endl;        
         char c = labyTab[i][j];
-
+        cout << "4.3 : "<< j << endl;
   		switch ( c )  
         {  
             case '+':
@@ -182,7 +203,7 @@ for(int i = 0; i < heightLab; i++)
 	}
 	waitFinMur=false;
 }
-
+cout << "5  " << endl;
 // 2eme boucle pour la création des murs verticaux et affiches
 for(int j = 0; j < widthLab; j++)
 {
@@ -222,6 +243,7 @@ for(int j = 0; j < widthLab; j++)
 }
 
 
+cout << "6  " << endl;
 
 
 cout << "size h:"<< heightLab <<" et w:" << widthLab << endl;
@@ -247,6 +269,7 @@ while(!done)
 
 
     x=i.top();
+    cpt=INT_MAX;
     if(x.second + 1 <= widthLab && _dist[x.first][x.second+1] >-1 )
       {cpt= min(cpt,_dist[x.first][x.second+1]+1);}
     if(x.second - 1 <= widthLab && _dist[x.first][x.second-1] >-1 )
@@ -256,6 +279,8 @@ while(!done)
     if(x.first - 1 <= widthLab && _dist[x.first-1][x.second] >-1 )
       {cpt= min(cpt,_dist[x.first-1][x.second]+1);}
     //cout  << "X : " << x.second << " Y : " << x.first  << " tab : " << _dist[x.first][x.second] << " data : " << (int)_data [x.first][x.second] << "cpt : "<< cpt <<endl;
+    if (cpt==INT_MAX)
+      {cpt=0;}
     i.pop();
     
     _dist[x.first][x.second]=cpt;
@@ -317,21 +342,21 @@ while(!done)
     }
     
 }
-/*
+cout << "7  " << endl;
 for(int j = 0; j < heightLab; j++)
 {
     for (int i = 0; i < widthLab; i++){
         
-        if (_dist[i][j]== -1){cout << "#";}
+        if (_dist[i][j]== -1){cout << "##";}
         else{ 
-            if(_dist[i][j]== 0){cout << "O";}
-            else {cout <<  "." ;}}
+            if(_dist[i][j]== 0){cout << "O ";}
+            else {if(_dist[i][j]< 10){cout <<  _dist[i][j]<<" " ;}
+            else {cout <<  _dist[i][j] ;}}}
         
         //cout <<(int)_data [i][j];
     }
     cout << endl;
 }
-*/
 	_nwall = nbWalls;
     _walls = walls;
 
