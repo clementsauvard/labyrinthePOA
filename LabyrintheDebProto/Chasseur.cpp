@@ -60,13 +60,13 @@ bool Chasseur::process_fireball (float dx, float dy)
             return false;
             break;
         case 3:  
-            message("UN GARDIEN");
+            message("UN TRESOR");
             dmax2 = (_l -> width ())*(_l -> width ()) + (_l -> height ())*(_l -> height ());
             _wall_hit -> play (1. - dist2/dmax2);
             return false;
             break;
         case 4:  
-            message("UN TRESOR");
+            message("UN GARDIEN");
             dmax2 = (_l -> width ())*(_l -> width ()) + (_l -> height ())*(_l -> height ());  
             _wall_hit -> play (1. - dist2/dmax2);
             return false;
