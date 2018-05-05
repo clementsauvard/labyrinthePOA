@@ -52,7 +52,7 @@ Labyrinthe::Labyrinthe (char* filename)
   int nbGuards = 1;
 
   // Ouverture du fichier
-  ifstream myfile ("labyrinthe.txt");
+  ifstream myfile (filename);
   if (myfile.is_open())
   {
     while ( myfile.good() )
@@ -93,7 +93,7 @@ _data[i] = (char*)malloc(sizeof(char) * heightLab);
 char labyTab[heightLab][widthLab];
 
 //Parcours du fichier et copie du labrinthe dans le tableau 2D
-ifstream myfile2 ("labyrinthe.txt");
+ifstream myfile2 (filename);
   if (myfile2.is_open())
   {
     while ( myfile2.good() )
