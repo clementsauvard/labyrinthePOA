@@ -13,6 +13,7 @@ Gardien::Gardien (Labyrinthe* l,const char* modele) : Mover (100, 80, l, modele)
 void Gardien::update (void) {
 	//cout << _l -> _nboxes << endl;
 	//move(1,1);
+	//cout << "lol" << _l -> width() << endl;
 }
 
 bool Gardien::move (double dx, double dy) { 

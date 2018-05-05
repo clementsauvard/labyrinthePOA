@@ -6,6 +6,7 @@
 class Labyrinthe : public Environnement {
 private:
 	char **_data;
+	int **_dist;
 	int	 heightl;
 	int  widthl;
 
@@ -15,6 +16,10 @@ public:
 	void setWidth(int w){widthl=w;}
 	int width () { return widthl;}	// retourne la largeur du labyrinthe.
 	int height () { return heightl;}	// retourne la longueur du labyrinthe.
+	int dist (int i, int j)
+	{
+		return _dist [i][j];
+	}
 	char data (int i, int j)
 	{
 		return _data [i][j];

@@ -224,12 +224,16 @@ for(int j = 0; j < widthLab; j++)
 
 
 
-int distTab[widthLab][heightLab];
+cout << "size h:"<< heightLab <<" et w:" << widthLab << endl;
+_dist = (int**)malloc(sizeof(int*) * widthLab);
+ 
+for (int i = 0; i < widthLab; i++)
+_dist[i] = (int*)malloc(sizeof(int) * heightLab);
 
 for(int j = 0; j < widthLab; j++)
 {
     for (int i = 0; i < heightLab; i++){
-        distTab[j][i]=-1;
+        _dist[j][i]=-1;
     }
 }
 
@@ -243,23 +247,23 @@ while(!done)
 
 
     x=i.top();
-    if(x.second + 1 <= widthLab && distTab[x.first][x.second+1] >-1 )
-      {cpt= min(cpt,distTab[x.first][x.second+1]+1);}
-    if(x.second - 1 <= widthLab && distTab[x.first][x.second-1] >-1 )
-      {cpt= min(cpt,distTab[x.first][x.second-1]+1);}
-    if(x.first + 1 <= widthLab && distTab[x.first+1][x.second] >-1 )
-      {cpt= min(cpt,distTab[x.first+1][x.second]+1);}
-    if(x.first - 1 <= widthLab && distTab[x.first-1][x.second] >-1 )
-      {cpt= min(cpt,distTab[x.first-1][x.second]+1);}
-    cout  << "X : " << x.second << " Y : " << x.first  << " tab : " << distTab[x.first][x.second] << " data : " << (int)_data [x.first][x.second] << "cpt : "<< cpt <<endl;
+    if(x.second + 1 <= widthLab && _dist[x.first][x.second+1] >-1 )
+      {cpt= min(cpt,_dist[x.first][x.second+1]+1);}
+    if(x.second - 1 <= widthLab && _dist[x.first][x.second-1] >-1 )
+      {cpt= min(cpt,_dist[x.first][x.second-1]+1);}
+    if(x.first + 1 <= widthLab && _dist[x.first+1][x.second] >-1 )
+      {cpt= min(cpt,_dist[x.first+1][x.second]+1);}
+    if(x.first - 1 <= widthLab && _dist[x.first-1][x.second] >-1 )
+      {cpt= min(cpt,_dist[x.first-1][x.second]+1);}
+    //cout  << "X : " << x.second << " Y : " << x.first  << " tab : " << _dist[x.first][x.second] << " data : " << (int)_data [x.first][x.second] << "cpt : "<< cpt <<endl;
     i.pop();
     
-    distTab[x.first][x.second]=cpt;
-    cout  << "tab2 : " << distTab[x.first][x.second] << " data : " << (int)_data [x.first][x.second] <<endl;
+    _dist[x.first][x.second]=cpt;
+    //cout  << "tab2 : " << _dist[x.first][x.second] << " data : " << (int)_data [x.first][x.second] <<endl;
     
 
     if((int)_data [x.first][x.second+1] == 0 || (int)_data [x.first][x.second+1] >= 4 ) {
-        if(distTab[x.first][x.second+1] == -1 || cpt+1 < distTab[x.first][x.second+1]  )
+        if(_dist[x.first][x.second+1] == -1 || cpt+1 < _dist[x.first][x.second+1]  )
         {
             if(x.second+1 <= heightLab)
             {
@@ -270,7 +274,7 @@ while(!done)
 
     if((int)_data [x.first+1][x.second] == 0 || (int)_data [x.first+1][x.second] >= 4 ) 
     {
-        if(distTab[x.first+1][x.second] == -1 || cpt+1 < distTab[x.first+1][x.second]  )
+        if(_dist[x.first+1][x.second] == -1 || cpt+1 < _dist[x.first+1][x.second]  )
         {
             if(x.first+1 <= widthLab)
             {
@@ -282,7 +286,7 @@ while(!done)
 
     if((int)_data [x.first-1][x.second] == 0 || (int)_data [x.first-1][x.second] >= 4 ) 
     {
-        if(distTab[x.first-1][x.second] == -1 || cpt+1 < distTab[x.first-1][x.second]  )
+        if(_dist[x.first-1][x.second] == -1 || cpt+1 < _dist[x.first-1][x.second]  )
         {
             if(x.first-1 >= 0)
             {
@@ -292,7 +296,7 @@ while(!done)
     }
     
     if((int)_data [x.first][x.second-1] == 0 || (int)_data [x.first][x.second-1] >= 4 ) {
-        if(distTab[x.first][x.second-1] == -1 || cpt+1 < distTab[x.first][x.second-1]  )
+        if(_dist[x.first][x.second-1] == -1 || cpt+1 < _dist[x.first][x.second-1]  )
         { 
             if(x.second-1 >= 0)
             {
@@ -301,7 +305,7 @@ while(!done)
         }
     }
 
-    cout << "Le nombre d'éléments de la pile est : " << i.size() << endl;
+    //cout << "Le nombre d'éléments de la pile est : " << i.size() << endl;
     
     
     
@@ -313,21 +317,21 @@ while(!done)
     }
     
 }
-
+/*
 for(int j = 0; j < heightLab; j++)
 {
     for (int i = 0; i < widthLab; i++){
         
-        if (distTab[i][j]== -1){cout << "#";}
+        if (_dist[i][j]== -1){cout << "#";}
         else{ 
-            if(distTab[i][j]== 0){cout << "O";}
+            if(_dist[i][j]== 0){cout << "O";}
             else {cout <<  "." ;}}
         
         //cout <<(int)_data [i][j];
     }
     cout << endl;
 }
-
+*/
 	_nwall = nbWalls;
     _walls = walls;
 
