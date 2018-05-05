@@ -14,6 +14,7 @@ public:
 	Labyrinthe (char*);
 	void setHeight(int h){heightl=h;}
 	void setWidth(int w){widthl=w;}
+	void setData(int x, int y, int z){_data[x][y] = z;}
 	int width () { return widthl;}	// retourne la largeur du labyrinthe.
 	int height () { return heightl;}	// retourne la longueur du labyrinthe.
 	int dist (int i, int j)
