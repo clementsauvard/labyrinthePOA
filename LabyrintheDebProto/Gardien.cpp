@@ -21,10 +21,10 @@ void Gardien::update (void) {
 	//cout << "lol" <<  reinterpret_cast<Labyrinthe*>(_l) -> dist(_x/_l -> scale,_y/_l -> scale) << endl;
 
 
-	int haut = reinterpret_cast<Labyrinthe*>(_l) -> dist(round(_x/_l -> scale),round(_y/_l -> scale)-1);
-	int gauche = reinterpret_cast<Labyrinthe*>(_l) -> dist(round(_x/_l -> scale)-1,round(_y/_l -> scale));
-	int droite = reinterpret_cast<Labyrinthe*>(_l) -> dist(round(_x/_l -> scale)+1,round(_y/_l -> scale));
-	int bas = reinterpret_cast<Labyrinthe*>(_l) -> dist(round(_x/_l -> scale),round(_y/_l -> scale)+1);
+	int haut = reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)-1);
+	int gauche = reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale)-1,ceil(_y/_l -> scale));
+	int droite = reinterpret_cast<Labyrinthe*>(_l) -> dist(floor(_x/_l -> scale)+1,floor(_y/_l -> scale));
+	int bas = reinterpret_cast<Labyrinthe*>(_l) -> dist(floor(_x/_l -> scale),floor(_y/_l -> scale)+1);
 
 	cout << "haut : " << haut << " bas : " << bas << " droite : " << droite << " gauche : " << gauche << endl;
 	cout << "x : " << (_x/_l -> scale)<< " y : " << _y/_l -> scale << endl;
