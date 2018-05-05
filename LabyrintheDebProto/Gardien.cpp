@@ -32,19 +32,15 @@ void Gardien::update (void) {
 	//cout << "x : " << (_x/_l -> scale)<< " y : " << _y/_l -> scale << endl;
 	if (haut == -1){
 		haut = INT_MAX;
-		cout << "haut "<< endl;
 	}
 	if (bas == -1){
 		bas = INT_MAX;
-		cout << "bas "<< endl;
 	}
 	if (droite == -1){
 		droite = INT_MAX;
-		cout << "droite "<< endl;
 	}
 	if (gauche == -1){
 		gauche = INT_MAX;
-		cout << "gquche "<< endl;
 	}
 
 
@@ -110,12 +106,16 @@ void Gardien::update (void) {
 }
 
 bool Gardien::move (double dx, double dy) {
-	reinterpret_cast<Labyrinthe*>(_l) -> setData (round(_x/_l -> scale),round(_y/_l -> scale),0);
+	 if( (int) reinterpret_cast<Labyrinthe*>(_l) -> data (ceil(_x/_l -> scale)+dx,ceil(_y/_l -> scale)+dy) != 4  ) 
+  	{   
+		reinterpret_cast<Labyrinthe*>(_l) -> setData (ceil(_x/_l -> scale),ceil(_y/_l -> scale),0); 
 
-	_x += dx;
-	_y += dy;
-	reinterpret_cast<Labyrinthe*>(_l) -> setData (ceil(_x/_l -> scale),ceil(_y/_l -> scale),4);
-	}
+		//cout << (int) reinterpret_cast<Labyrinthe*>(_l) -> data (ceil(_x/_l -> scale)+dx,ceil(_y/_l -> scale)+dy) << endl;
+
+		_x += dx;
+		_y += dy;
+		reinterpret_cast<Labyrinthe*>(_l) -> setData (ceil(_x/_l -> scale),ceil(_y/_l -> scale),4);
+}
 	return true;
 }
 
