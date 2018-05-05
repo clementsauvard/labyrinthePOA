@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include <vector>
+#include <limits.h>
 
 using namespace std;
 
@@ -24,9 +25,20 @@ void Gardien::update (void) {
 	int droite = reinterpret_cast<Labyrinthe*>(_l) -> dist((_x/_l -> scale)+1,(_y/_l -> scale));
 	int bas = reinterpret_cast<Labyrinthe*>(_l) -> dist((_x/_l -> scale),(_y/_l -> scale)+1);
 
+	if (haut == -1){
+		haut = INT_MAX;
+	}
+	if (bas == -1){
+		bas = INT_MAX;
+	}
+	if (droite == -1){
+		droite = INT_MAX;
+	}
+	if (gauche == -1){
+		gauche = INT_MAX;
+	}
 
-
-	vector<pair<int,int>> tempDir;
+	vector<pair<double,double>> tempDir;
 
 	int temp = min(min(min(haut,gauche),droite),bas);
 	
@@ -43,24 +55,31 @@ void Gardien::update (void) {
 		tempDir.push_back(make_pair(-1,0));
 	}
 
-	if (temp == 0){
-		tempDir.push_back(make_pair(0,0));
-	}
-	/*
 	for (int i = 0; i < tempDir.size(); i++){
-		cout << "x : " << tempDir[i].first << endl;
-		cout << "y : " << tempDir[i].second << endl;
+		cout << "x : " << tempDir[i].first << " y : " << tempDir[i].second << endl;
 	}
-	*/
-	if (tempDir.size() == 1){
-		reinterpret_cast<Labyrinthe*>(_l) -> setData ((_x/_l -> scale),(_y/_l -> scale),0);
+	
+	if (tempDir.size() >= 1){
+		if (tempDir[0].first == 1){
+			_angle = 270;
+		}
+		if (tempDir[0].first == -1){
+			_angle = 90;
+		}
+		if (tempDir[0].second == 1){
+			_angle = 0;
+		}
+		if (tempDir[0].second == -1){
+			_angle = 180;
+		}
 		move(tempDir[0].first,tempDir[0].second);
 		reinterpret_cast<Labyrinthe*>(_l) -> setData ((_x/_l -> scale),(_y/_l -> scale),4);
-
 	}
+	
 }
 
 bool Gardien::move (double dx, double dy) {
+	reinterpret_cast<Labyrinthe*>(_l) -> setData ((_x/_l -> scale),(_y/_l -> scale),0);
 	_x += dx;
 	_y += dy;
 	return true;

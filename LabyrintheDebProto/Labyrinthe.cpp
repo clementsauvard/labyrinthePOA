@@ -187,7 +187,7 @@ for(int i = 0; i < heightLab; i++)
                 break;
 	      	case 'G':
                 _data [j][i] = 4;
-                _guards [nbGuards] = new Gardien (this, "Marvin");
+                _guards [nbGuards] = new Gardien (this, "Potator");
                 _guards [nbGuards] -> _x = (float)j*scale;
                 _guards [nbGuards] -> _y = (float)i*scale;
                 nbGuards++;
