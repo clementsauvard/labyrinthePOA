@@ -9,6 +9,9 @@ class Gardien : public Mover {
 public:
 	Gardien (Labyrinthe* l, const char* modele);
 
+	int glife;
+	
+	int setGlife (){ glife = glife - 5; return glife;}
 	// mon gardien pense très mal!
 	void update (void);
 	// et ne bouge pas!
@@ -17,6 +20,8 @@ public:
 	void fire (int angle_vertical);
 	// quand a faire bouger la boule de feu...
 	bool process_fireball (float dx, float dy);
+
+	void isDead();
 };
 
 #endif

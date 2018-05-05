@@ -170,7 +170,7 @@ for(int i = 0; i < heightLab; i++)
                 nbCaisses++;
                 break; 
 	     	case 'C':
-                _data [j][i] = 5;
+                //_data [j][i] = 5;
                 _guards[0] = new Chasseur (this);
                 _guards [0] -> _x = (float)j*scale; 
                 _guards [0] -> _y = (float)i*scale;

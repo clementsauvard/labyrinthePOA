@@ -1,6 +1,9 @@
 #include "Chasseur.h"
 #include "Gardien.h"
 #include <stdlib.h>
+#include <iostream>
+
+using namespace std;
 
 /*
  *  Constructeur.
@@ -41,6 +44,11 @@ bool Chasseur::process_fireball (float dx, float dy)
     float   dmax2;
     // on bouge que dans le vide!
     
+    auto xPos = (int)((_fb -> get_x () + dx) / Environnement::scale);
+    auto yPos = (int)((_fb -> get_y () + dy) / Environnement::scale);
+
+    
+
     switch ( _l -> data ((int)((_fb -> get_x () + dx) / Environnement::scale),(int)((_fb -> get_y () + dy) / Environnement::scale)) )  
     {
         case EMPTY: 
@@ -67,6 +75,15 @@ bool Chasseur::process_fireball (float dx, float dy)
             break;
         case 4:  
             message("UN GARDIEN");
+            cout << "x : " << xPos << " y : "<< yPos << endl;
+            
+            for (int i = 1; i < _l ->_nguards ; i++){
+                if ((_l -> _guards[i] -> _x/Environnement::scale) == xPos && (_l -> _guards[i] -> _y/Environnement::scale) == yPos){
+                    cout << "prout" << endl;
+                     reinterpret_cast<Gardien*> (_l -> _guards[i]) -> glife = reinterpret_cast<Gardien*> (_l -> _guards[i]) -> glife - 1;
+                     reinterpret_cast<Gardien*> (_l -> _guards[i]) -> isDead();
+                }
+            }
             dmax2 = (_l -> width ())*(_l -> width ()) + (_l -> height ())*(_l -> height ());  
             _wall_hit -> play (1. - dist2/dmax2);
             return false;

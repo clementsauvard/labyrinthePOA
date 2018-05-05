@@ -6,20 +6,22 @@
 #include <vector>
 #include <limits.h>
 #include <math.h>
+#include <stdio.h>
+#include <time.h>
+
 
 using namespace std;
 
 Gardien::Gardien (Labyrinthe* l,const char* modele) : Mover (100, 80, l, modele)
 {
-	
+	glife=20;
 }
 
 void Gardien::update (void) {
 	//cout << _l -> _nboxes << endl;
 	//move(1,1);
 	//cout << _l -> scale << endl;
-	//cout << "lol" <<  reinterpret_cast<Labyrinthe*>(_l) -> dist(_x/_l -> scale,_y/_l -> scale) << endl;
-
+	//cout << "lol" <<  reinterpret_cast<Labyrinthe*>(_l) -> dist(_x/_l -> scale,_y/_l -> scale) << endl;	
 
 	int haut = reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)-1);
 	int gauche = reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale)-1,ceil(_y/_l -> scale));
@@ -64,15 +66,32 @@ void Gardien::update (void) {
 	if (temp == gauche && temp != 0){
 		tempDir.push_back(make_pair(-1,0));
 	}
-	if (tempDir.size() == 0){
-		cout << "lol mdr" << endl;	
-	}
 /*
 	for (int i = 0; i < tempDir.size(); i++){
 		cout << "x : " << tempDir[i].first << endl;
 		cout << "y : " << tempDir[i].second << endl;
 	}
 	*/
+	//cout << tempDir.size() << endl;
+	/*
+	if (tempDir.size() > 1){
+
+		int v2 = rand() % tempDir.size();
+		if (tempDir[v2].first == 1){
+			_angle = 270;
+		}
+		if (tempDir[v2].first == -1){
+			_angle = 90;
+		}
+		if (tempDir[v2].second == 1){
+			_angle = 0;
+		}
+		if (tempDir[v2].second == -1){
+			_angle = 180;
+		}
+		move(tempDir[v2].first,tempDir[v2].second);
+		
+	}*/
 	if (tempDir.size() >= 1){
 		if (tempDir[0].first == 1){
 			_angle = 270;
@@ -87,15 +106,12 @@ void Gardien::update (void) {
 			_angle = 180;
 		}
 		move(tempDir[0].first,tempDir[0].second);
-		
 	}
 }
 
 bool Gardien::move (double dx, double dy) {
-	if( (int) reinterpret_cast<Labyrinthe*>(_l) -> data (ceil(_x/_l -> scale)+dx,ceil(_y/_l -> scale)+dy) != 4  )
-	{	
-	reinterpret_cast<Labyrinthe*>(_l) -> setData (ceil(_x/_l -> scale),ceil(_y/_l -> scale),0);
-	cout << (int) reinterpret_cast<Labyrinthe*>(_l) -> data (ceil(_x/_l -> scale)+dx,ceil(_y/_l -> scale)+dy) << endl;
+	reinterpret_cast<Labyrinthe*>(_l) -> setData (round(_x/_l -> scale),round(_y/_l -> scale),0);
+
 	_x += dx;
 	_y += dy;
 	reinterpret_cast<Labyrinthe*>(_l) -> setData (ceil(_x/_l -> scale),ceil(_y/_l -> scale),4);
@@ -109,4 +125,12 @@ void Gardien::fire (int angle_vertical) {
 
 bool Gardien::process_fireball (float dx, float dy) { 
 	return false; 
+}
+
+void Gardien::isDead () {
+	if (glife == 0) {
+		cout << "t'es mort lel" << endl;
+		rester_au_sol();
+	}
+
 }
