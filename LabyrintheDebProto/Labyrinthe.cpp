@@ -8,6 +8,8 @@
 #include <iterator>
 #include <stack>
 
+#include <malloc.h>
+
 using namespace std;
 
 using namespace std;
@@ -78,6 +80,14 @@ Labyrinthe::Labyrinthe (char* filename)
     }
     myfile.close();
   }
+
+setHeight(heightLab);
+setWidth(widthLab);
+cout << "size h:"<< heightLab <<" et w:" << widthLab << endl;
+_data = (char**)malloc(sizeof(char*) * widthLab);
+ 
+for (int i = 0; i < widthLab; i++)
+_data[i] = (char*)malloc(sizeof(char) * heightLab);
 
 //Initialisation d'un tableau 2D
 char labyTab[heightLab][widthLab];
