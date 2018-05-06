@@ -34,7 +34,7 @@ void Gardien::update (void) {
 	else if (reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)) > rangeUp){
 		attaque = false;
 	}
-
+	cout << "attaque : " << attaque  <<endl;
 
 	if (!attaque){
 		haut = reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)-1);
@@ -106,22 +106,22 @@ void Gardien::update (void) {
 		move(tempDir[v2].first,tempDir[v2].second);
 		
 	}*/
-	cout << tempDir.size() << endl;
+	//cout << tempDir.size() << endl;
 	if (tempDir.size() >= 1){
-		if (tempDir[0].first == 1){
-			_angle = 270;
-		}
-		if (tempDir[0].first == -1){
-			_angle = 90;
-		}
-		if (tempDir[0].second == 1){
-			_angle = 0;
-		}
-		if (tempDir[0].second == -1){
-			_angle = 180;
-		}
 		
 		if (!mort){
+			if (tempDir[0].first == 1){
+				_angle = 270;
+			}
+			if (tempDir[0].first == -1){
+				_angle = 90;
+			}
+			if (tempDir[0].second == 1){
+				_angle = 0;
+			}
+			if (tempDir[0].second == -1){
+				_angle = 180;
+			}
 			move(tempDir[0].first,tempDir[0].second);	
 		}
 		else {
@@ -142,19 +142,19 @@ void Gardien::update (void) {
 			tempDir.push_back(make_pair(-1,0));
 		}
 		int v2 = rand() % tempDir.size();
-		if (tempDir[v2].first == 1){
-			_angle = 270;
-		}
-		if (tempDir[v2].first == -1){
-			_angle = 90;
-		}
-		if (tempDir[v2].second == 1){
-			_angle = 0;
-		}
-		if (tempDir[v2].second == -1){
-			_angle = 180;
-		}
 		if (!mort){
+			if (tempDir[v2].first == 1){
+				_angle = 270;
+			}
+			if (tempDir[v2].first == -1){
+				_angle = 90;
+			}
+			if (tempDir[v2].second == 1){
+				_angle = 0;
+			}
+			if (tempDir[v2].second == -1){
+				_angle = 180;
+			}
 			move(tempDir[v2].first,tempDir[v2].second);	
 		}
 		else {
@@ -171,16 +171,21 @@ void Gardien::update (void) {
 }
 
 bool Gardien::move (double dx, double dy) {
-	
-		reinterpret_cast<Labyrinthe*>(_l) -> setData (ceil(_x/_l -> scale),ceil(_y/_l -> scale),0); 
-
+		
+		if(reinterpret_cast<Labyrinthe*>(_l) -> data (ceil(_x/_l -> scale),ceil(_y/_l -> scale)) == 4 )
+		{
+			reinterpret_cast<Labyrinthe*>(_l) -> setData (ceil(_x/_l -> scale),ceil(_y/_l -> scale),0); 
+		}
 		//cout << (int) reinterpret_cast<Labyrinthe*>(_l) -> data (ceil(_x/_l -> scale)+dx,ceil(_y/_l -> scale)+dy) << endl;
 
 		_x += dx;
 		_y += dy;
-		reinterpret_cast<Labyrinthe*>(_l) -> setData (ceil(_x/_l -> scale),ceil(_y/_l -> scale),4);
+		if(reinterpret_cast<Labyrinthe*>(_l) -> data (ceil(_x/_l -> scale),ceil(_y/_l -> scale)) == 0 )
+		{
+			reinterpret_cast<Labyrinthe*>(_l) -> setData (ceil(_x/_l -> scale),ceil(_y/_l -> scale),4);
+		}
 
-	return true;
+		return true;
 }
 
 
@@ -197,8 +202,8 @@ bool Gardien::process_fireball (float dx, float dy) {
             return true;  
             break;  
         case 1:
-        	cout << _x << endl;
-        	cout << _fb -> get_x () << endl;
+        	//cout << _x << endl;
+        	//cout << _fb -> get_x () << endl;
             message("UN MUR");  
             dmax2 = (_l -> width ())*(_l -> width ()) + (_l -> height ())*(_l -> height ());  
             return false;
@@ -231,12 +236,12 @@ void Gardien::fire (int angle_vertical) {
 	auto posxC = (_l -> _guards[0] -> _x)/ Environnement::scale;
 	auto posyC = (_l -> _guards[0] -> _y)/ Environnement::scale;
 
-	cout << posxC << endl;
-	cout << _x/Environnement::scale << endl;
+	//cout << posxC << endl;
+	//cout << _x/Environnement::scale << endl;
 
 	auto angleTir = ceil(atan2(( posxC-_x/Environnement::scale ),(posyC-_y/Environnement::scale ) ) * 180 / M_PI);
 
-	cout << angleTir << "fdp"<< endl;
+	//cout << angleTir << "fdp"<< endl;
     _fb -> init (/* position initiale de la boule */ _x, _y, 10.,
                 /* angles de visée */ 0, angleTir);
 }
