@@ -16,21 +16,17 @@ Gardien::Gardien (Labyrinthe* l,const char* modele) : Mover (100, 80, l, modele)
 {
 	glife=20;
 	mort = false;
+	attaque = true;
 }
 bool pute = true;
 void Gardien::update (void) {
-	//cout << _l -> _nboxes << endl;
-	//move(1,1);
-	//cout << _l -> scale << endl;
-	//cout << "lol" <<  reinterpret_cast<Labyrinthe*>(_l) -> dist(_x/_l -> scale,_y/_l -> scale) << endl;	
-
+		
 	int haut = reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)-1);
 	int gauche = reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale)-1,ceil(_y/_l -> scale));
 	int droite = reinterpret_cast<Labyrinthe*>(_l) -> dist(floor(_x/_l -> scale)+1,floor(_y/_l -> scale));
 	int bas = reinterpret_cast<Labyrinthe*>(_l) -> dist(floor(_x/_l -> scale),floor(_y/_l -> scale)+1);
 
-	//cout << "haut : " << haut << " bas : " << bas << " droite : " << droite << " gauche : " << gauche << endl;
-	//cout << "x : " << (_x/_l -> scale)<< " y : " << _y/_l -> scale << endl;
+if (!attaque){
 	if (haut == -1){
 		haut = INT_MAX;
 	}
@@ -43,12 +39,30 @@ void Gardien::update (void) {
 	if (gauche == -1){
 		gauche = INT_MAX;
 	}
-
+}
+else {
+	if (haut == -1){
+		haut = 0;
+	}
+	if (bas == -1){
+		bas = 0;
+	}
+	if (droite == -1){
+		droite = 0;
+	}
+	if (gauche == -1){
+		gauche = 0;
+	}
+}
 
 	vector<pair<int,int> > tempDir;
-
-	int temp = min(min(min(haut,gauche),droite),bas);
-	
+	int temp;
+	if (!attaque){
+		temp = min(min(min(haut,gauche),droite),bas);
+	}
+	else{
+		temp = max(max(max(haut,gauche),droite),bas);
+	}
 	//cout << " temp : " << temp << endl;
 
 	if (temp == haut && temp != 0){
@@ -102,13 +116,13 @@ void Gardien::update (void) {
 		if (tempDir[0].second == -1){
 			_angle = 180;
 		}
-		/*
+		
 		if (!mort){
 			move(tempDir[0].first,tempDir[0].second);	
 		}
 		else {
 			reinterpret_cast<Labyrinthe*>(_l) -> setData (ceil(_x/_l -> scale),ceil(_y/_l -> scale),0);
-		}*/
+		}
 	}
 
 

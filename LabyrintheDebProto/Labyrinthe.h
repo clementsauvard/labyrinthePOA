@@ -7,6 +7,7 @@ class Labyrinthe : public Environnement {
 private:
 	char **_data;
 	int **_dist;
+	int ** _distToC;
 	int	 heightl;
 	int  widthl;
 
@@ -20,6 +21,10 @@ public:
 	int dist (int i, int j)
 	{
 		return _dist [i][j];
+	}
+	int distToC (int i, int j)
+	{
+		return _distToC [i][j];
 	}
 	char data (int i, int j)
 	{

@@ -13,6 +13,7 @@ public:
 
 	int glife;
 	bool mort;
+	bool attaque;
 
 	int setGlife (){ glife = glife - 5; return glife;}
 	// mon gardien pense très mal!

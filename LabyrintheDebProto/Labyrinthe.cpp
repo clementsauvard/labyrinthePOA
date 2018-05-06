@@ -170,7 +170,7 @@ for(int i = 0; i < heightLab; i++)
                 nbCaisses++;
                 break; 
 	     	case 'C':
-                _data [j][i] = 5;
+                //_data [j][i] = 5;
                 _guards[0] = new Chasseur (this);
                 _guards [0] -> _x = (float)j*scale; 
                 _guards [0] -> _y = (float)i*scale;
@@ -332,16 +332,128 @@ while(!done)
     }
     
 }
+
+
+
+
+cout << "size h:"<< heightLab <<" et w:" << widthLab << endl;
+_distToC = (int**)malloc(sizeof(int*) * widthLab);
+ 
+for (int i = 0; i < widthLab; i++)
+_distToC[i] = (int*)malloc(sizeof(int) * heightLab);
+
+for(int j = 0; j < widthLab; j++)
+{
+    for (int i = 0; i < heightLab; i++){
+        _distToC[j][i]=-1;
+    }
+}
+
+done=false;
+cpt=0;
+stack< pair <int,int> > i2;
+i2.push(make_pair (_guards[0] -> _x,_guards[0] -> _y));
+pair <int,int> x2;
+while(!done)
+{
+
+
+    x2=i2.top();
+    cpt=INT_MAX;
+    if(x2.second + 1 <= widthLab && _distToC[x2.first][x2.second+1] >-1 )
+      {cpt= min(cpt,_distToC[x2.first][x2.second+1]+1);}
+    if(x2.second - 1 <= widthLab && _distToC[x2.first][x2.second-1] >-1 )
+      {cpt= min(cpt,_distToC[x2.first][x2.second-1]+1);}
+    if(x2.first + 1 <= widthLab && _distToC[x2.first+1][x2.second] >-1 )
+      {cpt= min(cpt,_distToC[x2.first+1][x2.second]+1);}
+    if(x2.first - 1 <= widthLab && _distToC[x2.first-1][x2.second] >-1 )
+      {cpt= min(cpt,_distToC[x2.first-1][x2.second]+1);}
+    //cout  << "X : " << x.second << " Y : " << x.first  << " tab : " << _dist[x.first][x.second] << " data : " << (int)_data [x.first][x.second] << "cpt : "<< cpt <<endl;
+    if (cpt==INT_MAX)
+      {cpt=0;}
+    i2.pop();
+    
+    _distToC[x2.first][x2.second]=cpt;
+    //cout  << "tab2 : " << _dist[x.first][x.second] << " data : " << (int)_data [x.first][x.second] <<endl;
+    
+
+    if((int)_data [x2.first][x2.second+1] == 0 || (int)_data [x2.first][x2.second+1] >= 4 ) {
+        if(_distToC[x2.first][x2.second+1] == -1 || cpt+1 < _distToC[x2.first][x2.second+1]  )
+        {
+            if(x2.second+1 <= heightLab)
+            {
+                i2.push(make_pair (x2.first,x2.second+1));
+            }
+        }
+    }
+
+    if((int)_data [x2.first+1][x2.second] == 0 || (int)_data [x2.first+1][x2.second] >= 4 ) 
+    {
+        if(_distToC[x2.first+1][x2.second] == -1 || cpt+1 < _distToC[x2.first+1][x2.second]  )
+        {
+            if(x2.first+1 <= widthLab)
+            {
+                i2.push(make_pair (x2.first+1,x2.second));
+            }
+        }
+    }
+
+
+    if((int)_data [x2.first-1][x2.second] == 0 || (int)_data [x2.first-1][x2.second] >= 4 ) 
+    {
+        if(_distToC[x2.first-1][x2.second] == -1 || cpt+1 < _distToC[x2.first-1][x2.second]  )
+        {
+            if(x2.first-1 >= 0)
+            {
+               i2.push(make_pair (x2.first-1,x2.second));
+            }
+        }
+    }
+    
+    if((int)_data [x2.first][x2.second-1] == 0 || (int)_data [x2.first][x2.second-1] >= 4 ) {
+        if(_distToC[x2.first][x2.second-1] == -1 || cpt+1 < _distToC[x2.first][x2.second-1]  )
+        { 
+            if(x2.second-1 >= 0)
+            {
+              i2.push(make_pair (x2.first,x2.second-1));
+            }
+        }
+    }
+
+    //cout << "Le nombre d'éléments de la pile est : " << i.size() << endl;
+    
+    
+    
+    cpt++;
+    if(i2.empty()  
+       //|| i.size()>600
+      ){
+        done=true;
+    }
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
 cout << "7  " << endl;
 for(int j = 0; j < heightLab; j++)
 {
     for (int i = 0; i < widthLab; i++){
         
-        if (_dist[i][j]== -1){cout << "##";}
+        if (_distToC[i][j]== -1){cout << "##";}
         else{ 
-            if(_dist[i][j]== 0){cout << "O ";}
-            else {if(_dist[i][j]< 10){cout <<  _dist[i][j]<<" " ;}
-            else {cout <<  _dist[i][j] ;}}}
+            if(_distToC[i][j]== 0){cout << "O ";}
+            else {if(_distToC[i][j]< 10){cout <<  _distToC[i][j]<<" " ;}
+            else {cout <<  _distToC[i][j] ;}}}
         
         //cout <<(int)_data [i][j];
     }
