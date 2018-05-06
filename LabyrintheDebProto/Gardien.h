@@ -8,6 +8,9 @@
 class Labyrinthe;
 
 class Gardien : public Mover {
+private:
+	int ** _distToC;
+
 public:
 	Gardien (Labyrinthe* l, const char* modele);
 
@@ -28,6 +31,11 @@ public:
 	bool process_fireball (float dx, float dy);
 
 	void isDead();
+
+	int distToC (int i, int j)
+	{
+		return _distToC [i][j];
+	}
 };
 
 #endif

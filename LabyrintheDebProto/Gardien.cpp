@@ -29,9 +29,108 @@ void Gardien::update (void) {
 	int bas;
 
 	if (reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)) < 10){
+
 		attaque = true;
+
+		cout << "size h:"<< heightLab <<" et w:" << widthLab << endl;
+		_distToC = (int**)malloc(sizeof(int*) * _l -> width());
+		 
+		for (int i = 0; i < _l -> width(); i++)
+		_distToC[i] = (int*)malloc(sizeof(int) * _l -> height());
+
+		for(int j = 0; j < _l -> width(); j++)
+		{
+		    for (int i = 0; i < _l -> height(); i++){
+		        _distToC[j][i]=-1;
+		    }
+		}
+		bool done=false;
+		int cpt=0;
+		stack< pair <int,int> > i2;
+		while
+
+
+
+		i2.push(make_pair (_guards[0] -> _x/scale,_guards[0] -> _y/scale));
+		pair <int,int> x2;
+		while(!done)
+		{
+		    x2=i2.top();
+		    cpt=INT_MAX;
+		    if(x2.second + 1 <= widthLab && _distToC[x2.first][x2.second+1] >-1 )
+		      {cpt= min(cpt,_distToC[x2.first][x2.second+1]+1);}
+		    if(x2.second - 1 <= widthLab && _distToC[x2.first][x2.second-1] >-1 )
+		      {cpt= min(cpt,_distToC[x2.first][x2.second-1]+1);}
+		    if(x2.first + 1 <= widthLab && _distToC[x2.first+1][x2.second] >-1 )
+		      {cpt= min(cpt,_distToC[x2.first+1][x2.second]+1);}
+		    if(x2.first - 1 <= widthLab && _distToC[x2.first-1][x2.second] >-1 )
+		      {cpt= min(cpt,_distToC[x2.first-1][x2.second]+1);}
+		    //cout  << "X : " << x.second << " Y : " << x.first  << " tab : " << _dist[x.first][x.second] << " data : " << (int)_data [x.first][x.second] << "cpt : "<< cpt <<endl;
+		    if (cpt==INT_MAX)
+		      {cpt=0;}
+		    i2.pop();
+		    
+		    _distToC[x2.first][x2.second]=cpt;
+		    //cout  << "tab2 : " << _dist[x.first][x.second] << " data : " << (int)_data [x.first][x.second] <<endl;
+
+		    if((int)_data [x2.first][x2.second+1] == 0 || (int)_data [x2.first][x2.second+1] >= 4 ) {
+		        if(_distToC[x2.first][x2.second+1] == -1 || cpt+1 < _distToC[x2.first][x2.second+1]  )
+		        {
+		            if(x2.second+1 <= heightLab)
+		            {
+		                i2.push(make_pair (x2.first,x2.second+1));
+		            }
+		        }
+		    }
+
+		    if((int)_data [x2.first+1][x2.second] == 0 || (int)_data [x2.first+1][x2.second] >= 4 ) 
+		    {
+		        if(_distToC[x2.first+1][x2.second] == -1 || cpt+1 < _distToC[x2.first+1][x2.second]  )
+		        {
+		            if(x2.first+1 <= widthLab)
+		            {
+		                i2.push(make_pair (x2.first+1,x2.second));
+		            }
+		        }
+		    }
+
+
+		    if((int)_data [x2.first-1][x2.second] == 0 || (int)_data [x2.first-1][x2.second] >= 4 ) 
+		    {
+		        if(_distToC[x2.first-1][x2.second] == -1 || cpt+1 < _distToC[x2.first-1][x2.second]  )
+		        {
+		            if(x2.first-1 >= 0)
+		            {
+		               i2.push(make_pair (x2.first-1,x2.second));
+		            }
+		        }
+		    }
+		    
+		    if((int)_data [x2.first][x2.second-1] == 0 || (int)_data [x2.first][x2.second-1] >= 4 ) {
+		        if(_distToC[x2.first][x2.second-1] == -1 || cpt+1 < _distToC[x2.first][x2.second-1]  )
+		        { 
+		            if(x2.second-1 >= 0)
+		            {
+		              i2.push(make_pair (x2.first,x2.second-1));
+		            }
+		        }
+		    }
+
+		    //cout << "Le nombre d'éléments de la pile est : " << i.size() << endl;
+		    
+		    
+		    
+		    cpt++;
+		    if(i2.empty()  
+		       //|| i.size()>600
+		      ){
+		        done=true;
+		    }
+		    
+		}
+
 	}
-	else if (reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)) > 50){
+	else if (reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)) > 100){
 		attaque = false;
 	}
 
@@ -41,14 +140,14 @@ void Gardien::update (void) {
 	if (!attaque){
 		haut = reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)-1);
 		gauche = reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale)-1,ceil(_y/_l -> scale));
-		droite = reinterpret_cast<Labyrinthe*>(_l) -> dist(floor(_x/_l -> scale)+1,floor(_y/_l -> scale));
-		bas = reinterpret_cast<Labyrinthe*>(_l) -> dist(floor(_x/_l -> scale),floor(_y/_l -> scale)+1);
+		droite = reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale)+1,ceil(_y/_l -> scale));
+		bas = reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)+1);
 	}
 	else {
 		haut = reinterpret_cast<Labyrinthe*>(_l) -> distToC(ceil(_x/_l -> scale),ceil(_y/_l -> scale)-1);
 		gauche = reinterpret_cast<Labyrinthe*>(_l) -> distToC(ceil(_x/_l -> scale)-1,ceil(_y/_l -> scale));
-		droite = reinterpret_cast<Labyrinthe*>(_l) -> distToC(floor(_x/_l -> scale)+1,floor(_y/_l -> scale));
-		bas = reinterpret_cast<Labyrinthe*>(_l) -> distToC(floor(_x/_l -> scale),floor(_y/_l -> scale)+1);
+		droite = reinterpret_cast<Labyrinthe*>(_l) -> distToC(ceil(_x/_l -> scale)+1,ceil(_y/_l -> scale));
+		bas = reinterpret_cast<Labyrinthe*>(_l) -> distToC(ceil(_x/_l -> scale),ceil(_y/_l -> scale)+1);
 	}
 
 	if (haut == -1){
