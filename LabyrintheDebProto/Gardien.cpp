@@ -184,11 +184,11 @@ void Gardien::fire (int angle_vertical) {
 	cout << posxC << endl;
 	cout << _x/Environnement::scale << endl;
 
-	auto angleTir = ceil(atan2(_y - posyC, _x - posxC) * 180 / M_PI);
+	auto angleTir = ceil(atan2(( posxC-_x/Environnement::scale ),(posyC-_y/Environnement::scale ) ) * 180 / M_PI);
 
 	cout << angleTir << "fdp"<< endl;
     _fb -> init (/* position initiale de la boule */ _x, _y, 10.,
-                /* angles de visée */ 0, 270);
+                /* angles de visée */ 0, angleTir);
 }
 
 void Gardien::isDead () {
