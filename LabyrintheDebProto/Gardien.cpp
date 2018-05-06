@@ -102,20 +102,21 @@ void Gardien::update (void) {
 		if (tempDir[0].second == -1){
 			_angle = 180;
 		}
+		/*
 		if (!mort){
 			move(tempDir[0].first,tempDir[0].second);	
 		}
 		else {
 			reinterpret_cast<Labyrinthe*>(_l) -> setData (ceil(_x/_l -> scale),ceil(_y/_l -> scale),0);
-		}
+		}*/
 	}
 
-	auto posxC = _l -> _guards[0] -> _x;
-	auto posyC = _l -> _guards[0] -> _y;
 
-	auto testo = atan2(_y - posyC, _x - posxC) * 180 / M_PI;
-
-
+	if (pute){
+		fire(0);
+		pute = false;
+	}
+		
 }
 
 bool Gardien::move (double dx, double dy) {
@@ -146,7 +147,8 @@ bool Gardien::process_fireball (float dx, float dy) {
             return true;  
             break;  
         case 1:
-        cout << "lol" << endl;
+        	cout << _x << endl;
+        	cout << _fb -> get_x () << endl;
             message("UN MUR");  
             dmax2 = (_l -> width ())*(_l -> width ()) + (_l -> height ())*(_l -> height ());  
             return false;
@@ -161,6 +163,11 @@ bool Gardien::process_fireball (float dx, float dy) {
             dmax2 = (_l -> width ())*(_l -> width ()) + (_l -> height ())*(_l -> height ());
             return false;
             break;
+        case 5:  
+            message("UN Gardien");
+            dmax2 = (_l -> width ())*(_l -> width ()) + (_l -> height ())*(_l -> height ());
+            return false;
+            break;
          default:  
             message("wtfdidujustdidulilshit");
             dmax2 = (_l -> width ())*(_l -> width ()) + (_l -> height ())*(_l -> height ());
@@ -170,8 +177,18 @@ bool Gardien::process_fireball (float dx, float dy) {
 void Gardien::fire (int angle_vertical) {
 	int p1 = ( ((rand() % 10) - 5)*((20-glife))/20 );
     int p2 = ( ((rand() % 10) - 5)*((20-glife))/20 );
+
+	auto posxC = (_l -> _guards[0] -> _x)/ Environnement::scale;
+	auto posyC = (_l -> _guards[0] -> _y)/ Environnement::scale;
+
+	cout << posxC << endl;
+	cout << _x/Environnement::scale << endl;
+
+	auto angleTir = ceil(atan2(_y - posyC, _x - posxC) * 180 / M_PI);
+
+	cout << angleTir << "fdp"<< endl;
     _fb -> init (/* position initiale de la boule */ _x, _y, 10.,
-                /* angles de visée */ angle_vertical+p1, _angle+p2);
+                /* angles de visée */ 0, 270);
 }
 
 void Gardien::isDead () {
