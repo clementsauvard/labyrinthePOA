@@ -28,7 +28,7 @@ void Gardien::update (void) {
 	int droite;
 	int bas;
 
-	if (reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)) < 10){
+	if (reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)) < 20){
 
 		attaque = true;
 
@@ -56,6 +56,8 @@ void Gardien::update (void) {
                 fini = true;
             }
         }
+        cout << x1 << endl;
+        cout << y1 << endl;
 
 		i2.push(make_pair (x1,y1));
 		pair <int,int> x2;
@@ -67,9 +69,9 @@ void Gardien::update (void) {
 		      {cpt= min(cpt,_distToC[x2.first][x2.second+1]+1);}
 		    if(x2.second - 1 <= _l -> width() && _distToC[x2.first][x2.second-1] >-1 )
 		      {cpt= min(cpt,_distToC[x2.first][x2.second-1]+1);}
-		    if(x2.first + 1 <= _l -> width() && _distToC[x2.first+1][x2.second] >-1 )
+		    if(x2.first + 1 <= _l -> height() && _distToC[x2.first+1][x2.second] >-1 )
 		      {cpt= min(cpt,_distToC[x2.first+1][x2.second]+1);}
-		    if(x2.first - 1 <= _l -> width() && _distToC[x2.first-1][x2.second] >-1 )
+		    if(x2.first - 1 <= _l -> height() && _distToC[x2.first-1][x2.second] >-1 )
 		      {cpt= min(cpt,_distToC[x2.first-1][x2.second]+1);}
 		    //cout  << "X : " << x.second << " Y : " << x.first  << " tab : " << _dist[x.first][x.second] << " data : " << (int)_data [x.first][x.second] << "cpt : "<< cpt <<endl;
 		    if (cpt==INT_MAX)
@@ -136,12 +138,17 @@ void Gardien::update (void) {
 		}
 
 	}
-	else if (reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)) > 60){
+	else if (reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)) > 60 || _distToC[ceil(_x/_l -> scale)][ceil(_y/_l -> scale)] < 5){
 		attaque = false;
+		for (int i = 0; i < _l -> width(); i++)
+		{
+		  free(_distToC[i]);
+		}
+		free(_distToC);
 	}
 
-	cout << "case dikstra : " << reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)) <<endl;
-	cout << "x : " << ceil(_x/_l -> scale) << " y : " << ceil(_y/_l -> scale) << endl;
+	//cout << "case dikstra : " << reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)) <<endl;
+	//cout << "x : " << ceil(_x/_l -> scale) << " y : " << ceil(_y/_l -> scale) << endl;
 
 	if (!attaque){
 		haut = reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)-1);

@@ -262,9 +262,9 @@ while(!done)
       {cpt= min(cpt,_dist[x.first][x.second+1]+1);}
     if(x.second - 1 <= widthLab && _dist[x.first][x.second-1] >-1 )
       {cpt= min(cpt,_dist[x.first][x.second-1]+1);}
-    if(x.first + 1 <= widthLab && _dist[x.first+1][x.second] >-1 )
+    if(x.first + 1 <= heightLab && _dist[x.first+1][x.second] >-1 )
       {cpt= min(cpt,_dist[x.first+1][x.second]+1);}
-    if(x.first - 1 <= widthLab && _dist[x.first-1][x.second] >-1 )
+    if(x.first - 1 <= heightLab && _dist[x.first-1][x.second] >-1 )
       {cpt= min(cpt,_dist[x.first-1][x.second]+1);}
     //cout  << "X : " << x.second << " Y : " << x.first  << " tab : " << _dist[x.first][x.second] << " data : " << (int)_data [x.first][x.second] << "cpt : "<< cpt <<endl;
     if (cpt==INT_MAX)
@@ -330,15 +330,6 @@ while(!done)
     }
     
 }
-
-
-
-
-
-
-
-
-
 
 
 
