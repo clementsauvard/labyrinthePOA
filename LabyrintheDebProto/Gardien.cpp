@@ -16,7 +16,7 @@ Gardien::Gardien (Labyrinthe* l,const char* modele) : Mover (100, 80, l, modele)
 {
 	glife=20;
 	mort = false;
-	attaque = true;
+	attaque = false;
 	rangeDown = rand() % 20 + 10;
 	rangeUp = rand() %  30 + 30;
 }
@@ -28,13 +28,13 @@ void Gardien::update (void) {
 	int droite;
 	int bas;
 
-	if (reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)) < rangeDown){
+	if (reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)) <= 10){
 		attaque = true;
 	}
-	else if (reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)) > rangeUp){
+	else if (reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)) >= 30){
 		attaque = false;
 	}
-	cout << "attaque : " << attaque  <<endl;
+	cout << attaque << endl;
 
 	if (!attaque){
 		haut = reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)-1);
@@ -141,8 +141,10 @@ void Gardien::update (void) {
 		if ((int) reinterpret_cast<Labyrinthe*>(_l) -> data (ceil(_x/_l -> scale)-1,ceil(_y/_l -> scale)) == 0){
 			tempDir.push_back(make_pair(-1,0));
 		}
-		int v2 = rand() % tempDir.size();
-		if (!mort){
+		int v2;
+		if (tempDir.size() != 0){
+			v2 = rand() % tempDir.size();
+
 			if (tempDir[v2].first == 1){
 				_angle = 270;
 			}
@@ -155,10 +157,12 @@ void Gardien::update (void) {
 			if (tempDir[v2].second == -1){
 				_angle = 180;
 			}
-			move(tempDir[v2].first,tempDir[v2].second);	
-		}
-		else {
-			reinterpret_cast<Labyrinthe*>(_l) -> setData (ceil(_x/_l -> scale),ceil(_y/_l -> scale),0);
+			if (!mort){
+				move(tempDir[v2].first,tempDir[v2].second);	
+			}
+			else {
+				reinterpret_cast<Labyrinthe*>(_l) -> setData (ceil(_x/_l -> scale),ceil(_y/_l -> scale),0);
+			}
 		}
 	}
 
