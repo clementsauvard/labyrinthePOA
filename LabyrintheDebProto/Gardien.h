@@ -19,9 +19,10 @@ public:
 	bool attaque;
 	int rangeUp;
 	int rangeDown;
+	bool alloc;
 
 	int setGlife (){ glife = glife - 5; return glife;}
-	// mon gardien pense très mal!
+	// mon gardien pense trï¿½s mal!
 	void update (void);
 	// et ne bouge pas!
 	bool move (double dx, double dy);
