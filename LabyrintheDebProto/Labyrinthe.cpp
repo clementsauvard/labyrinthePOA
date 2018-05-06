@@ -445,11 +445,11 @@ for(int j = 0; j < heightLab; j++)
 {
     for (int i = 0; i < widthLab; i++){
         
-        if (_distToC[i][j]== -1){cout << "##";}
+        if (_dist[i][j]== -1){cout << "##";}
         else{ 
-            if(_distToC[i][j]== 0){cout << "O ";}
-            else {if(_distToC[i][j]< 10){cout <<  _distToC[i][j]<<" " ;}
-            else {cout <<  _distToC[i][j] ;}}}
+            if(_dist[i][j]== 0){cout << "O ";}
+            else {if(_dist[i][j]< 10){cout <<  _dist[i][j]<<" " ;}
+            else {cout <<  _dist[i][j] ;}}}
         
         //cout <<(int)_data [i][j];
     }

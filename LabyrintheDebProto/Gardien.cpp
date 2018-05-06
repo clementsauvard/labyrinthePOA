@@ -28,13 +28,15 @@ void Gardien::update (void) {
 	int droite;
 	int bas;
 
-	if (reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)) <= 10){
+	if (reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)) < 10){
 		attaque = true;
 	}
-	else if (reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)) >= 30){
+	else if (reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)) > 50){
 		attaque = false;
 	}
-	cout << attaque << endl;
+
+	cout << "case dikstra : " << reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)) <<endl;
+	cout << "x : " << ceil(_x/_l -> scale) << " y : " << ceil(_y/_l -> scale) << endl;
 
 	if (!attaque){
 		haut = reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)-1);
