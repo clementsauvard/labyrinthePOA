@@ -8,7 +8,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <time.h>
-
+#include <stack>
 
 using namespace std;
 
@@ -79,7 +79,7 @@ void Gardien::update (void) {
 		    _distToC[x2.first][x2.second]=cpt;
 		    //cout  << "tab2 : " << _dist[x.first][x.second] << " data : " << (int)_data [x.first][x.second] <<endl;
 
-		    if((int)_data [x2.first][x2.second+1] == 0 || (int)_data [x2.first][x2.second+1] >= 4 ) {
+		    if((int) reinterpret_cast<Labyrinthe*>(_l) -> data (x2.first,x2.second+1) == 0 || (int) reinterpret_cast<Labyrinthe*>(_l) -> data (x2.first,x2.second+1) >= 4 ) {
 		        if(_distToC[x2.first][x2.second+1] == -1 || cpt+1 < _distToC[x2.first][x2.second+1]  )
 		        {
 		            if(x2.second+1 <= _l -> height())
@@ -89,7 +89,7 @@ void Gardien::update (void) {
 		        }
 		    }
 
-		    if((int)_data [x2.first+1][x2.second] == 0 || (int)_data [x2.first+1][x2.second] >= 4 ) 
+		    if((int) reinterpret_cast<Labyrinthe*>(_l) -> data (x2.first+1,x2.second) == 0 || (int) reinterpret_cast<Labyrinthe*>(_l) -> data (x2.first+1,x2.second) >= 4 ) 
 		    {
 		        if(_distToC[x2.first+1][x2.second] == -1 || cpt+1 < _distToC[x2.first+1][x2.second]  )
 		        {
@@ -101,7 +101,7 @@ void Gardien::update (void) {
 		    }
 
 
-		    if((int)_data [x2.first-1][x2.second] == 0 || (int)_data [x2.first-1][x2.second] >= 4 ) 
+		    if((int) reinterpret_cast<Labyrinthe*>(_l) -> data (x2.first-1,x2.second) == 0 || (int) reinterpret_cast<Labyrinthe*>(_l) -> data (x2.first-1,x2.second) >= 4 ) 
 		    {
 		        if(_distToC[x2.first-1][x2.second] == -1 || cpt+1 < _distToC[x2.first-1][x2.second]  )
 		        {
@@ -112,7 +112,7 @@ void Gardien::update (void) {
 		        }
 		    }
 		    
-		    if((int)_data [x2.first][x2.second-1] == 0 || (int)_data [x2.first][x2.second-1] >= 4 ) {
+		    if((int) reinterpret_cast<Labyrinthe*>(_l) -> data (x2.first,x2.second-1) == 0 || (int) reinterpret_cast<Labyrinthe*>(_l) -> data (x2.first,x2.second-1) >= 4 ) {
 		        if(_distToC[x2.first][x2.second-1] == -1 || cpt+1 < _distToC[x2.first][x2.second-1]  )
 		        { 
 		            if(x2.second-1 >= 0)
@@ -136,7 +136,7 @@ void Gardien::update (void) {
 		}
 
 	}
-	else if (reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)) > 100){
+	else if (reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)) > 60){
 		attaque = false;
 	}
 
