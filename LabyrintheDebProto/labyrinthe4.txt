@@ -8,7 +8,9 @@ b	affiche2.jpg	# texture de l'affiche 2
 |                                                                                    |
 |           T                                                                        |
 |                                                                                    |
-|                                                                          G         |
+|           T                                  G                                     |
+|                                                                                    |
+|                                                                                    |
 |                                                                                    |
 |                                           x                                        |
 |                                                             C                      |

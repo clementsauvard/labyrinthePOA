@@ -145,19 +145,19 @@ void Gardien::update (void) {
 		if (tempDir.size() != 0){
 			v2 = rand() % tempDir.size();
 
-			if (tempDir[v2].first == 1){
-				_angle = 270;
-			}
-			if (tempDir[v2].first == -1){
-				_angle = 90;
-			}
-			if (tempDir[v2].second == 1){
-				_angle = 0;
-			}
-			if (tempDir[v2].second == -1){
-				_angle = 180;
-			}
 			if (!mort){
+				if (tempDir[v2].first == 1){
+					_angle = 270;
+				}
+				if (tempDir[v2].first == -1){
+					_angle = 90;
+				}
+				if (tempDir[v2].second == 1){
+					_angle = 0;
+				}
+				if (tempDir[v2].second == -1){
+					_angle = 180;
+				}
 				move(tempDir[v2].first,tempDir[v2].second);	
 			}
 			else {
