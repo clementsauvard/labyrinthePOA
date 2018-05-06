@@ -16,6 +16,7 @@ Gardien::Gardien (Labyrinthe* l,const char* modele) : Mover (100, 80, l, modele)
 {
 	glife=20;
 	mort = false;
+	alloc=false;
 	attaque = false;
 	rangeDown = rand() % 20 + 10;
 	rangeUp = rand() %  30 + 30;
@@ -32,11 +33,11 @@ void Gardien::update (void) {
 
 		attaque = true;
 
-		_distToC = (int**)malloc(sizeof(int*) * _l -> width());
+		_distToC = (int**)malloc(sizeof(int*) * (_l -> width()));
 		 
 		for (int i = 0; i < _l -> width(); i++)
-		_distToC[i] = (int*)malloc(sizeof(int) * _l -> height());
-
+		_distToC[i] = (int*)malloc(sizeof(int) * (_l -> height()));
+		alloc=true;
 		for(int j = 0; j < _l -> width(); j++)
 		{
 		    for (int i = 0; i < _l -> height(); i++){
@@ -138,13 +139,14 @@ void Gardien::update (void) {
 		}
 
 	}
-	else if (reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)) > 60 || distToC(ceil(_x/_l -> scale),ceil(_y/_l -> scale) < 5)){
+	else if (reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)) > 60 || (alloc && distToC(ceil(_x/_l -> scale),ceil(_y/_l -> scale)) < 5))
+	{
 		attaque = false;
-		for (int i = 0; i < _l -> width(); i++)
-		{
-		  free(_distToC[i]);
-		}
-		free(_distToC);
+//		for (int i = 0; i < _l -> width(); i++)
+//		{
+//		  free(_distToC[i]);
+//		}
+//		free(_distToC);
 	}
 
 	//cout << "case dikstra : " << reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)) <<endl;
