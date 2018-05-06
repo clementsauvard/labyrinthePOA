@@ -235,8 +235,6 @@ for(int j = 0; j < widthLab; j++)
 
 cout << "6  " << endl;
 
-
-cout << "size h:"<< heightLab <<" et w:" << widthLab << endl;
 _dist = (int**)malloc(sizeof(int*) * widthLab);
  
 for (int i = 0; i < widthLab; i++)
@@ -348,11 +346,10 @@ for(int j = 0; j < widthLab; j++)
         _distToC[j][i]=-1;
     }
 }
-
 done=false;
 cpt=0;
 stack< pair <int,int> > i2;
-i2.push(make_pair (_guards[0] -> _x,_guards[0] -> _y));
+i2.push(make_pair (_guards[0] -> _x/scale,_guards[0] -> _y/scale));
 pair <int,int> x2;
 while(!done)
 {
@@ -375,7 +372,6 @@ while(!done)
     
     _distToC[x2.first][x2.second]=cpt;
     //cout  << "tab2 : " << _dist[x.first][x.second] << " data : " << (int)_data [x.first][x.second] <<endl;
-    
 
     if((int)_data [x2.first][x2.second+1] == 0 || (int)_data [x2.first][x2.second+1] >= 4 ) {
         if(_distToC[x2.first][x2.second+1] == -1 || cpt+1 < _distToC[x2.first][x2.second+1]  )

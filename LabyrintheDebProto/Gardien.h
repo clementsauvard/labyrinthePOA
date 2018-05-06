@@ -14,6 +14,8 @@ public:
 	int glife;
 	bool mort;
 	bool attaque;
+	int rangeUp;
+	int rangeDown;
 
 	int setGlife (){ glife = glife - 5; return glife;}
 	// mon gardien pense très mal!

@@ -17,16 +17,38 @@ Gardien::Gardien (Labyrinthe* l,const char* modele) : Mover (100, 80, l, modele)
 	glife=20;
 	mort = false;
 	attaque = true;
+	rangeDown = rand() % 20 + 10;
+	rangeUp = rand() %  30 + 30;
 }
 bool pute = true;
 void Gardien::update (void) {
 		
-	int haut = reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)-1);
-	int gauche = reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale)-1,ceil(_y/_l -> scale));
-	int droite = reinterpret_cast<Labyrinthe*>(_l) -> dist(floor(_x/_l -> scale)+1,floor(_y/_l -> scale));
-	int bas = reinterpret_cast<Labyrinthe*>(_l) -> dist(floor(_x/_l -> scale),floor(_y/_l -> scale)+1);
+	int haut;
+	int gauche;
+	int droite;
+	int bas;
 
-if (!attaque){
+	if (reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)) < rangeDown){
+		attaque = true;
+	}
+	else if (reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)) > rangeUp){
+		attaque = false;
+	}
+
+
+	if (!attaque){
+		haut = reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)-1);
+		gauche = reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale)-1,ceil(_y/_l -> scale));
+		droite = reinterpret_cast<Labyrinthe*>(_l) -> dist(floor(_x/_l -> scale)+1,floor(_y/_l -> scale));
+		bas = reinterpret_cast<Labyrinthe*>(_l) -> dist(floor(_x/_l -> scale),floor(_y/_l -> scale)+1);
+	}
+	else {
+		haut = reinterpret_cast<Labyrinthe*>(_l) -> distToC(ceil(_x/_l -> scale),ceil(_y/_l -> scale)-1);
+		gauche = reinterpret_cast<Labyrinthe*>(_l) -> distToC(ceil(_x/_l -> scale)-1,ceil(_y/_l -> scale));
+		droite = reinterpret_cast<Labyrinthe*>(_l) -> distToC(floor(_x/_l -> scale)+1,floor(_y/_l -> scale));
+		bas = reinterpret_cast<Labyrinthe*>(_l) -> distToC(floor(_x/_l -> scale),floor(_y/_l -> scale)+1);
+	}
+
 	if (haut == -1){
 		haut = INT_MAX;
 	}
@@ -39,42 +61,23 @@ if (!attaque){
 	if (gauche == -1){
 		gauche = INT_MAX;
 	}
-}
-else {
-	if (haut == -1){
-		haut = 0;
-	}
-	if (bas == -1){
-		bas = 0;
-	}
-	if (droite == -1){
-		droite = 0;
-	}
-	if (gauche == -1){
-		gauche = 0;
-	}
-}
 
 	vector<pair<int,int> > tempDir;
-	int temp;
-	if (!attaque){
-		temp = min(min(min(haut,gauche),droite),bas);
-	}
-	else{
-		temp = max(max(max(haut,gauche),droite),bas);
-	}
+	
+	int temp = min(min(min(haut,gauche),droite),bas);
+	
 	//cout << " temp : " << temp << endl;
 
-	if (temp == haut && temp != 0){
+	if (temp == haut && temp != 0 && (int) reinterpret_cast<Labyrinthe*>(_l) -> data (ceil(_x/_l -> scale),ceil(_y/_l -> scale)-1) != 4){
 		tempDir.push_back(make_pair(0,-1));
 	}
-	if (temp == bas && temp != 0){
+	if (temp == bas && temp != 0 && (int) reinterpret_cast<Labyrinthe*>(_l) -> data (ceil(_x/_l -> scale),ceil(_y/_l -> scale)+1) != 4){
 		tempDir.push_back(make_pair(0,1));
 	}
-	if (temp == droite && temp != 0){
+	if (temp == droite && temp != 0 && (int) reinterpret_cast<Labyrinthe*>(_l) -> data (ceil(_x/_l -> scale)+1,ceil(_y/_l -> scale)) != 4){
 		tempDir.push_back(make_pair(1,0));
 	}
-	if (temp == gauche && temp != 0){
+	if (temp == gauche && temp != 0 && (int) reinterpret_cast<Labyrinthe*>(_l) -> data (ceil(_x/_l -> scale)-1,ceil(_y/_l -> scale)) != 4){
 		tempDir.push_back(make_pair(-1,0));
 	}
 /*
@@ -103,6 +106,7 @@ else {
 		move(tempDir[v2].first,tempDir[v2].second);
 		
 	}*/
+	cout << tempDir.size() << endl;
 	if (tempDir.size() >= 1){
 		if (tempDir[0].first == 1){
 			_angle = 270;
@@ -124,6 +128,39 @@ else {
 			reinterpret_cast<Labyrinthe*>(_l) -> setData (ceil(_x/_l -> scale),ceil(_y/_l -> scale),0);
 		}
 	}
+	else {
+		if ((int) reinterpret_cast<Labyrinthe*>(_l) -> data (ceil(_x/_l -> scale),ceil(_y/_l -> scale)-1) == 0){
+			tempDir.push_back(make_pair(0,-1));
+		}
+		if ((int) reinterpret_cast<Labyrinthe*>(_l) -> data (ceil(_x/_l -> scale),ceil(_y/_l -> scale)+1) == 0){
+			tempDir.push_back(make_pair(0,1));
+		}
+		if ((int) reinterpret_cast<Labyrinthe*>(_l) -> data (ceil(_x/_l -> scale)+1,ceil(_y/_l -> scale)) == 0){
+			tempDir.push_back(make_pair(1,0));
+		}
+		if ((int) reinterpret_cast<Labyrinthe*>(_l) -> data (ceil(_x/_l -> scale)-1,ceil(_y/_l -> scale)) == 0){
+			tempDir.push_back(make_pair(-1,0));
+		}
+		int v2 = rand() % tempDir.size();
+		if (tempDir[v2].first == 1){
+			_angle = 270;
+		}
+		if (tempDir[v2].first == -1){
+			_angle = 90;
+		}
+		if (tempDir[v2].second == 1){
+			_angle = 0;
+		}
+		if (tempDir[v2].second == -1){
+			_angle = 180;
+		}
+		if (!mort){
+			move(tempDir[v2].first,tempDir[v2].second);	
+		}
+		else {
+			reinterpret_cast<Labyrinthe*>(_l) -> setData (ceil(_x/_l -> scale),ceil(_y/_l -> scale),0);
+		}
+	}
 
 
 	if (pute){
@@ -134,8 +171,7 @@ else {
 }
 
 bool Gardien::move (double dx, double dy) {
-	 if( (int) reinterpret_cast<Labyrinthe*>(_l) -> data (ceil(_x/_l -> scale)+dx,ceil(_y/_l -> scale)+dy) != 4  ) 
-  	{   
+	
 		reinterpret_cast<Labyrinthe*>(_l) -> setData (ceil(_x/_l -> scale),ceil(_y/_l -> scale),0); 
 
 		//cout << (int) reinterpret_cast<Labyrinthe*>(_l) -> data (ceil(_x/_l -> scale)+dx,ceil(_y/_l -> scale)+dy) << endl;
@@ -143,7 +179,7 @@ bool Gardien::move (double dx, double dy) {
 		_x += dx;
 		_y += dy;
 		reinterpret_cast<Labyrinthe*>(_l) -> setData (ceil(_x/_l -> scale),ceil(_y/_l -> scale),4);
-}
+
 	return true;
 }
 
