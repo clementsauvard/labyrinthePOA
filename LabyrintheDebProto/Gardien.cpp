@@ -138,7 +138,7 @@ void Gardien::update (void) {
 		}
 
 	}
-	else if (reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)) > 60 || _distToC[ceil(_x/_l -> scale)][ceil(_y/_l -> scale)] < 5){
+	else if (reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)) > 60 || distToC(ceil(_x/_l -> scale),ceil(_y/_l -> scale) < 5)){
 		attaque = false;
 		for (int i = 0; i < _l -> width(); i++)
 		{
