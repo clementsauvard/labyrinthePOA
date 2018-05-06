@@ -15,8 +15,9 @@ using namespace std;
 Gardien::Gardien (Labyrinthe* l,const char* modele) : Mover (100, 80, l, modele)
 {
 	glife=20;
+	mort = false;
 }
-
+bool pute = true;
 void Gardien::update (void) {
 	//cout << _l -> _nboxes << endl;
 	//move(1,1);
@@ -101,8 +102,20 @@ void Gardien::update (void) {
 		if (tempDir[0].second == -1){
 			_angle = 180;
 		}
-		move(tempDir[0].first,tempDir[0].second);
+		if (!mort){
+			move(tempDir[0].first,tempDir[0].second);	
+		}
+		else {
+			reinterpret_cast<Labyrinthe*>(_l) -> setData (ceil(_x/_l -> scale),ceil(_y/_l -> scale),0);
+		}
 	}
+
+	auto posxC = _l -> _guards[0] -> _x;
+	auto posyC = _l -> _guards[0] -> _y;
+
+	auto testo = atan2(_y - posyC, _x - posxC) * 180 / M_PI;
+
+
 }
 
 bool Gardien::move (double dx, double dy) {
@@ -119,17 +132,53 @@ bool Gardien::move (double dx, double dy) {
 	return true;
 }
 
-void Gardien::fire (int angle_vertical) {
-
-}
 
 bool Gardien::process_fireball (float dx, float dy) { 
-	return false; 
+	float   x = (_x - _fb -> get_x ()) / Environnement::scale;
+    float   y = (_y - _fb -> get_y ()) / Environnement::scale;
+    float   dist2 = x*x + y*y;
+    float   dmax2;
+
+    switch ( _l -> data ((int)((_fb -> get_x () + dx) / Environnement::scale),(int)((_fb -> get_y () + dy) / Environnement::scale)) )  
+    {
+        case EMPTY: 
+            message("LE VIDE");
+            return true;  
+            break;  
+        case 1:
+        cout << "lol" << endl;
+            message("UN MUR");  
+            dmax2 = (_l -> width ())*(_l -> width ()) + (_l -> height ())*(_l -> height ());  
+            return false;
+            break;
+        case 2:
+            message("UNE CAISSE");
+            dmax2 = (_l -> width ())*(_l -> width ()) + (_l -> height ())*(_l -> height ());
+            return false;
+            break;
+        case 3:  
+            message("UN TRESOR");
+            dmax2 = (_l -> width ())*(_l -> width ()) + (_l -> height ())*(_l -> height ());
+            return false;
+            break;
+         default:  
+            message("wtfdidujustdidulilshit");
+            dmax2 = (_l -> width ())*(_l -> width ()) + (_l -> height ())*(_l -> height ());
+            return false;
+    }
+}
+void Gardien::fire (int angle_vertical) {
+	int p1 = ( ((rand() % 10) - 5)*((20-glife))/20 );
+    int p2 = ( ((rand() % 10) - 5)*((20-glife))/20 );
+    _fb -> init (/* position initiale de la boule */ _x, _y, 10.,
+                /* angles de visée */ angle_vertical+p1, _angle+p2);
 }
 
 void Gardien::isDead () {
-	if (glife == 0) {
+	cout << glife << endl;
+	if (glife <= 0) {
 		cout << "t'es mort lel" << endl;
+		mort = true;
 		rester_au_sol();
 	}
 

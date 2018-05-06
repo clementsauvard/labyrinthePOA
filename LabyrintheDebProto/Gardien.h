@@ -1,7 +1,9 @@
 #ifndef GARDIEN_H
 #define GARDIEN_H
 
+#include <stdio.h>
 #include "Mover.h"
+#include "Sound.h"
 
 class Labyrinthe;
 
@@ -10,7 +12,8 @@ public:
 	Gardien (Labyrinthe* l, const char* modele);
 
 	int glife;
-	
+	bool mort;
+
 	int setGlife (){ glife = glife - 5; return glife;}
 	// mon gardien pense très mal!
 	void update (void);
