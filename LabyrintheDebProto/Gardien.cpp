@@ -66,13 +66,13 @@ void Gardien::update (void) {
 		{
 		    x2=i2.top();
 		    cpt=INT_MAX;
-		    if(x2.second + 1 <= _l -> width() && _distToC[x2.first][x2.second+1] >-1 )
+		    if(x2.second + 1 <= _l -> height() && _distToC[x2.first][x2.second+1] >-1 )
 		      {cpt= min(cpt,_distToC[x2.first][x2.second+1]+1);}
-		    if(x2.second - 1 <= _l -> width() && _distToC[x2.first][x2.second-1] >-1 )
+		    if(x2.second - 1 <= _l -> height() && _distToC[x2.first][x2.second-1] >-1 )
 		      {cpt= min(cpt,_distToC[x2.first][x2.second-1]+1);}
-		    if(x2.first + 1 <= _l -> height() && _distToC[x2.first+1][x2.second] >-1 )
+		    if(x2.first + 1 <= _l -> width() && _distToC[x2.first+1][x2.second] >-1 )
 		      {cpt= min(cpt,_distToC[x2.first+1][x2.second]+1);}
-		    if(x2.first - 1 <= _l -> height() && _distToC[x2.first-1][x2.second] >-1 )
+		    if(x2.first - 1 <= _l -> width() && _distToC[x2.first-1][x2.second] >-1 )
 		      {cpt= min(cpt,_distToC[x2.first-1][x2.second]+1);}
 		    //cout  << "X : " << x.second << " Y : " << x.first  << " tab : " << _dist[x.first][x.second] << " data : " << (int)_data [x.first][x.second] << "cpt : "<< cpt <<endl;
 		    if (cpt==INT_MAX)
