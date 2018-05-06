@@ -14,7 +14,7 @@ using namespace std;
 
 Gardien::Gardien (Labyrinthe* l,const char* modele) : Mover (100, 80, l, modele)
 {
-	glife=20;
+	glife=5;
 	mort = false;
 	alloc=false;
 	attaque = false;
@@ -57,8 +57,8 @@ void Gardien::update (void) {
                 fini = true;
             }
         }
-        cout << x1 << endl;
-        cout << y1 << endl;
+        //cout << x1 << endl;
+        //cout << y1 << endl;
 
 		i2.push(make_pair (x1,y1));
 		pair <int,int> x2;
@@ -139,24 +139,19 @@ void Gardien::update (void) {
 		}
 
 	}
-	else if (reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)) > 60 || (alloc && distToC(ceil(_x/_l -> scale),ceil(_y/_l -> scale)) < 5))
+	else if (reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)) > 140 || (alloc && distToC(ceil(_x/_l -> scale),ceil(_y/_l -> scale)) < 2))
 	{
 		attaque = false;
-//		for (int i = 0; i < _l -> width(); i++)
-//		{
-//		  free(_distToC[i]);
-//		}
-//		free(_distToC);
 	}
 
 	//cout << "case dikstra : " << reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)) <<endl;
 	//cout << "x : " << ceil(_x/_l -> scale) << " y : " << ceil(_y/_l -> scale) << endl;
-
+	
 	if (!attaque){
 		haut = reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)-1);
 		gauche = reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale)-1,ceil(_y/_l -> scale));
-		droite = reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale)+1,ceil(_y/_l -> scale));
-		bas = reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)+1);
+		droite = reinterpret_cast<Labyrinthe*>(_l) -> dist(floor(_x/_l -> scale)+1,floor(_y/_l -> scale));
+		bas = reinterpret_cast<Labyrinthe*>(_l) -> dist(floor(_x/_l -> scale),floor(_y/_l -> scale)+1);
 	}
 	else {
 		haut = distToC(ceil(_x/_l -> scale),ceil(_y/_l -> scale)-1);
@@ -184,16 +179,16 @@ void Gardien::update (void) {
 	
 	//cout << " temp : " << temp << endl;
 
-	if (temp == haut && temp != 0 && (int) reinterpret_cast<Labyrinthe*>(_l) -> data (ceil(_x/_l -> scale),ceil(_y/_l -> scale)-1) != 4){
+	if (temp == haut && temp != 0 ){
 		tempDir.push_back(make_pair(0,-1));
 	}
-	if (temp == bas && temp != 0 && (int) reinterpret_cast<Labyrinthe*>(_l) -> data (ceil(_x/_l -> scale),ceil(_y/_l -> scale)+1) != 4){
+	if (temp == bas && temp != 0 ){
 		tempDir.push_back(make_pair(0,1));
 	}
-	if (temp == droite && temp != 0 && (int) reinterpret_cast<Labyrinthe*>(_l) -> data (ceil(_x/_l -> scale)+1,ceil(_y/_l -> scale)) != 4){
+	if (temp == droite && temp != 0 ){
 		tempDir.push_back(make_pair(1,0));
 	}
-	if (temp == gauche && temp != 0 && (int) reinterpret_cast<Labyrinthe*>(_l) -> data (ceil(_x/_l -> scale)-1,ceil(_y/_l -> scale)) != 4){
+	if (temp == gauche && temp != 0 ){
 		tempDir.push_back(make_pair(-1,0));
 	}
 /*
@@ -244,43 +239,7 @@ void Gardien::update (void) {
 			reinterpret_cast<Labyrinthe*>(_l) -> setData (ceil(_x/_l -> scale),ceil(_y/_l -> scale),0);
 		}
 	}
-	else {
-		if ((int) reinterpret_cast<Labyrinthe*>(_l) -> data (ceil(_x/_l -> scale),ceil(_y/_l -> scale)-1) == 0){
-			tempDir.push_back(make_pair(0,-1));
-		}
-		if ((int) reinterpret_cast<Labyrinthe*>(_l) -> data (ceil(_x/_l -> scale),ceil(_y/_l -> scale)+1) == 0){
-			tempDir.push_back(make_pair(0,1));
-		}
-		if ((int) reinterpret_cast<Labyrinthe*>(_l) -> data (ceil(_x/_l -> scale)+1,ceil(_y/_l -> scale)) == 0){
-			tempDir.push_back(make_pair(1,0));
-		}
-		if ((int) reinterpret_cast<Labyrinthe*>(_l) -> data (ceil(_x/_l -> scale)-1,ceil(_y/_l -> scale)) == 0){
-			tempDir.push_back(make_pair(-1,0));
-		}
-		int v2;
-		if (tempDir.size() != 0){
-			v2 = rand() % tempDir.size();
-
-			if (!mort){
-				if (tempDir[v2].first == 1){
-					_angle = 270;
-				}
-				if (tempDir[v2].first == -1){
-					_angle = 90;
-				}
-				if (tempDir[v2].second == 1){
-					_angle = 0;
-				}
-				if (tempDir[v2].second == -1){
-					_angle = 180;
-				}
-				move(tempDir[v2].first,tempDir[v2].second);	
-			}
-			else {
-				reinterpret_cast<Labyrinthe*>(_l) -> setData (ceil(_x/_l -> scale),ceil(_y/_l -> scale),0);
-			}
-		}
-	}
+	
 
 
 	if (pute){
