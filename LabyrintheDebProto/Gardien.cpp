@@ -239,12 +239,46 @@ void Gardien::update (void) {
 			reinterpret_cast<Labyrinthe*>(_l) -> setData (ceil(_x/_l -> scale),ceil(_y/_l -> scale),0);
 		}
 	}
-	
 
+//cout << "x : " << ceil( _x/Environnement::scale ) << " y : " << ceil(_y/Environnement::scale) << endl;
+	cout << "xC :" << ((int)_l -> _guards[0] -> _x/Environnement::scale)-ceil( _x/Environnement::scale ) << "yC : " << ((int)_l -> _guards[0] -> _y/Environnement::scale)-ceil(_y/Environnement::scale) << endl;
+	bool cmort = false;
+	if (((int)_l -> _guards[0] -> _x/Environnement::scale)-ceil( _x/Environnement::scale ) == 0){
+		if (((int)_l -> _guards[0] -> _y/Environnement::scale)-ceil(_y/Environnement::scale) > 0){
+			for (int i = 0; i < ((int)_l -> _guards[0] -> _y/Environnement::scale)-ceil(_y/Environnement::scale); i++){
+				if (reinterpret_cast<Labyrinthe*>(_l) -> data (ceil(_x/Environnement::scale)+i,ceil( _y/Environnement::scale)) == 1){
+					cmort = true;
+				}
+			}
+		}
+		else {
+			for (int i = 0; i > ((int)_l -> _guards[0] -> _y/Environnement::scale)-ceil(_y/Environnement::scale); i--){
+				if (reinterpret_cast<Labyrinthe*>(_l) -> data (ceil(_x/Environnement::scale)+i,ceil( _y/Environnement::scale)) == 1){
+					cmort = true;
+				}
+			}
+		}
+	}
 
-	if (pute){
+	if (((int)_l -> _guards[0] -> _y/Environnement::scale)-ceil( _y/Environnement::scale ) == 0){
+		if (((int)_l -> _guards[0] -> _x/Environnement::scale)-ceil(_x/Environnement::scale) > 0){
+			for (int i = 0; i < ((int)_l -> _guards[0] -> _x/Environnement::scale)-ceil(_x/Environnement::scale); i++){
+				if (reinterpret_cast<Labyrinthe*>(_l) -> data (ceil(_x/Environnement::scale),ceil( _y/Environnement::scale)+i) == 1){
+					cmort = true;
+				}
+			}
+		}
+		else {
+			for (int i = 0; i > ((int)_l -> _guards[0] -> _x/Environnement::scale)-ceil(_x/Environnement::scale); i--){
+				if (reinterpret_cast<Labyrinthe*>(_l) -> data (ceil(_x/Environnement::scale),ceil( _y/Environnement::scale)+i) == 1){
+					cmort = true;
+				}
+			}
+		}
+	}
+
+	if (!cmort){
 		fire(0);
-		pute = false;
 	}
 		
 }
