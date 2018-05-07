@@ -17,7 +17,7 @@ public:
     /*
     *	Le son...
     */
-    int life;
+    int life; // Vie du chasseur
     static Sound*	_hunter_fire;	// bruit de l'arme du chasseur.
     static Sound*	_hunter_hit;	// cri du chasseur touché.
     static Sound*	_wall_hit;		// on a tapé un mur.

@@ -34,7 +34,7 @@ bool Chasseur::move_aux (double dx, double dy)
 }
 
 /*
- *  Fait bouger la boule de feu (ceci est une exemple, à vous de traiter les collisions spécifiques...)
+ *  Fait bouger la boule de feu (ceci est une exemple, ï¿½ vous de traiter les collisions spï¿½cifiques...)
  */
 bool Chasseur::process_fireball (float dx, float dy)
 {
@@ -47,6 +47,7 @@ bool Chasseur::process_fireball (float dx, float dy)
     auto xPos = (int)((_fb -> get_x () + dx) / Environnement::scale);
     auto yPos = (int)((_fb -> get_y () + dy) / Environnement::scale);
 
+    //On regarde la case oï¿½ est la boule
     switch ( _l -> data ((int)((_fb -> get_x () + dx) / Environnement::scale),(int)((_fb -> get_y () + dy) / Environnement::scale)) )  
     {
         case EMPTY: 
@@ -67,6 +68,7 @@ bool Chasseur::process_fireball (float dx, float dy)
             break;
         case 3:  
             message("UN TRESOR");
+            // exit(0) vous avez gagnez
             exit(0);
             dmax2 = (_l -> width ())*(_l -> width ()) + (_l -> height ())*(_l -> height ());
             _wall_hit -> play (1. - dist2/dmax2);
@@ -75,7 +77,7 @@ bool Chasseur::process_fireball (float dx, float dy)
             break;
         case 4:  
             message("UN GARDIEN");
-                cout << "x : " << xPos << " y : "<< yPos << endl;
+            //On regarde quel gardien on a touchï¿½ et on dï¿½crï¿½mente sa vie de 1, et on check si il est mort
             for (int i = 1; i < _l ->_nguards ; i++){
                 if (ceil(_l -> _guards[i] -> _x/Environnement::scale) == xPos && ceil(_l -> _guards[i] -> _y/Environnement::scale) == yPos){
                     cout << "prout" << endl;
@@ -88,7 +90,7 @@ bool Chasseur::process_fireball (float dx, float dy)
             return false;
             break;
          default:  
-            message("wtfdidujustdidulilshit");
+            message("");
             dmax2 = (_l -> width ())*(_l -> width ()) + (_l -> height ())*(_l -> height ());
             _wall_hit -> play (1. - dist2/dmax2);
             return false;
@@ -103,20 +105,17 @@ bool Chasseur::process_fireball (float dx, float dy)
     //message ("Booom...");
 
 }
-
-
-
-
 /*
  *  Tire sur un ennemi.
  */
 void Chasseur::fire (int angle_vertical)
 {
+    // Calcul permettant de dï¿½finir la prï¿½cision du tir selon la vie du gardien
     int p1 = ( ((rand() % 10) - 5)*((20-life))/20 );
     int p2 = ( ((rand() % 10) - 5)*((20-life))/20 );
     message ("I AM THE WHOOSH...  %d , %d",p1,life);
     _hunter_fire -> play ();
     //cout << _x << endl;
     _fb -> init (/* position initiale de la boule */ _x, _y, 10.,
-                /* angles de visée */ angle_vertical+p1, _angle+p2);
+                /* angles de visï¿½e */ angle_vertical+p1, _angle+p2);
 }

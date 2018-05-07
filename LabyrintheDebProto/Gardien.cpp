@@ -18,10 +18,9 @@ Gardien::Gardien (Labyrinthe* l,const char* modele) : Mover (100, 80, l, modele)
 	mort = false;
 	alloc=false;
 	attaque = false;
-	rangeDown = rand() % 20 + 10;
-	rangeUp = rand() %  30 + 30;
+	//rangeDown = rand() % 20 + 10;
+	//rangeUp = rand() %  30 + 30;
 }
-bool pute = true;
 void Gardien::update (void) {
 		
 	int haut;
@@ -314,46 +313,33 @@ bool Gardien::move (double dx, double dy) {
 
 
 bool Gardien::process_fireball (float dx, float dy) { 
-	float   x = (_x - _fb -> get_x ()) / Environnement::scale;
-    float   y = (_y - _fb -> get_y ()) / Environnement::scale;
-    float   dist2 = x*x + y*y;
-    float   dmax2;
 
     switch ( _l -> data ((int)((_fb -> get_x () + dx) / Environnement::scale),(int)((_fb -> get_y () + dy) / Environnement::scale)) )  
     {
         case EMPTY: 
-            message("LE VIDE");
             return true;  
             break;  
         case 1:
-        	//cout << _x << endl;
-        	//cout << _fb -> get_x () << endl;
-            message("UN MUR");  
-            dmax2 = (_l -> width ())*(_l -> width ()) + (_l -> height ())*(_l -> height ());  
             return false;
             break;
         case 2:
             message("UNE CAISSE");
-            dmax2 = (_l -> width ())*(_l -> width ()) + (_l -> height ())*(_l -> height ());
             return false;
             break;
         case 3:  
             message("UN TRESOR");
-            dmax2 = (_l -> width ())*(_l -> width ()) + (_l -> height ())*(_l -> height ());
             return false;
             break;
-        case 5:  
-            message("UN Gardien");
-            dmax2 = (_l -> width ())*(_l -> width ()) + (_l -> height ())*(_l -> height ());
+        case 5:
+        	message("LE CHASSEUR");
             return false;
             break;
-         default:  
-            message("wtfdidujustdidulilshit");
-            dmax2 = (_l -> width ())*(_l -> width ()) + (_l -> height ())*(_l -> height ());
+         default:
             return false;
     }
 }
 void Gardien::fire (int angle_vertical) {
+	// Calcul permettant de définir la précision du tir selon la vie du gardien
 	int p1 = ( ((rand() % 10) - 5)*((20-glife))/20 );
     int p2 = ( ((rand() % 10) - 5)*((20-glife))/20 );
 
@@ -367,11 +353,11 @@ void Gardien::fire (int angle_vertical) {
 
 	//cout << angleTir << "fdp"<< endl;
     _fb -> init (/* position initiale de la boule */ _x, _y, 10.,
-                /* angles de visée */ 0, angleTir);
+                /* angles de visée */ 0, angleTir+p1);
 }
 
 void Gardien::isDead () {
-	cout << glife << endl;
+	// Si le gardien est mort on le laisse au sol
 	if (glife <= 0) {
 		cout << "t'es mort lel" << endl;
 		mort = true;

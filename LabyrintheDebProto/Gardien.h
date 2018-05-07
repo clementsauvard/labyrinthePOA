@@ -14,14 +14,13 @@ private:
 public:
 	Gardien (Labyrinthe* l, const char* modele);
 
-	int glife;
-	bool mort;
-	bool attaque;
+	int glife; // Vie du gardien
+	bool mort; // Gardien mort ou en vie
+	bool attaque; // true = mode attaque , false = mode défense
 	int rangeUp;
 	int rangeDown;
 	bool alloc;
 
-	int setGlife (){ glife = glife - 5; return glife;}
 	// mon gardien pense trï¿½s mal!
 	void update (void);
 	// et ne bouge pas!
@@ -30,9 +29,9 @@ public:
 	void fire (int angle_vertical);
 	// quand a faire bouger la boule de feu...
 	bool process_fireball (float dx, float dy);
-
+	// Le gardien est il mort ?
 	void isDead();
-
+	//retourne la case du tableau _distoc[i][j] -> tableau dikjstra
 	int distToC (int i, int j)
 	{
 		return _distToC [i][j];

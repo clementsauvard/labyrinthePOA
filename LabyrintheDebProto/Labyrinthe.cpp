@@ -89,16 +89,12 @@ Labyrinthe::Labyrinthe (char* filename)
   }
 
 
-cout << "3  " << endl;
-
-
+//On sauvegarde la hauteur et la largeur du labyrinthe
 setHeight(heightLab);
 setWidth(widthLab);
 
-cout << "size h:"<< heightLab <<" et w:" << widthLab << endl;
-
+// Initialisation du tableau 2D data
 _data = (char**)malloc(sizeof(char*) * widthLab);
- 
 for (int i = 0; i < widthLab; i++)
 _data[i] = (char*)malloc(sizeof(char) * heightLab);
 
@@ -141,47 +137,54 @@ for(int i = 0; i < heightLab; i++)
         char c = labyTab[i][j];
   		switch ( c )  
         {  
-            case '+':
-                if (waitFinMur){
-	                walls[nbWalls] = {j,i,x2Mur,y2Mur,0};
-	                nbWalls++;
-	            }
-	            x2Mur = j;
-	            y2Mur = i;
-	            waitFinMur = true;
-            	break;  
-             case '#':  
+          //Début de mur
+          case '+':
+            if (waitFinMur){
+              walls[nbWalls] = {j,i,x2Mur,y2Mur,0};
+              nbWalls++;
+            }
+            x2Mur = j;
+            y2Mur = i;
+            waitFinMur = true;
+          	break;
+             //commentaire  
+          case '#':  
                 getline(myfile,line);  
 	            break;
-	         case '-':
-                break;
-	         case ' ':
-                waitFinMur = false;
-                break;
-	     	case 'a':
+          case '-':
+              break;
+          case ' ':
+              waitFinMur = false;
+              break;
+        //Affiche a
+	     	   case 'a':
                 if (waitFinMur){
                     affiches[nbAffiches] = {j, i, j+2,i,0};
                     nbAffiches++;
                 }
                 break;
-	     	case 'x':
+           //Une caisse
+	     	   case 'x':
                 _data [j][i] = 2;
                 caisses[nbCaisses] = {j, i,0};
                 nbCaisses++;
                 break; 
-	     	case 'C':
+            //Le chasseur
+	     	   case 'C':
                 //_data [j][i] = 5;
                 _guards[0] = new Chasseur (this);
                 _guards [0] -> _x = (float)j*scale; 
                 _guards [0] -> _y = (float)i*scale;
                 break;
-	      	case 'G':
+            //Gardiens
+	      	  case 'G':
                 _data [j][i] = 4;
                 _guards [nbGuards] = new Gardien (this, "Potator");
                 _guards [nbGuards] -> _x = (float)j*scale;
                 _guards [nbGuards] -> _y = (float)i*scale;
                 nbGuards++;
                 break;
+            // le tresor
             case 'T':
                 _data [j][i] = 3;
                 _treasor._x =j;
@@ -232,14 +235,12 @@ for(int j = 0; j < widthLab; j++)
 	}
 }
 
-
-cout << "6  " << endl;
-
+//Initialisation du tableau 2D _dist qui contient le tableau résultant de l'algorithme de Dikjstra
 _dist = (int**)malloc(sizeof(int*) * widthLab);
- 
 for (int i = 0; i < widthLab; i++)
 _dist[i] = (int*)malloc(sizeof(int) * heightLab);
 
+//On initialise ce tableau a -1 partout
 for(int j = 0; j < widthLab; j++)
 {
     for (int i = 0; i < heightLab; i++){
@@ -247,6 +248,7 @@ for(int j = 0; j < widthLab; j++)
     }
 }
 
+//----------------------------- Dikjstra -----------------------------
 bool done=false;
 int cpt=0;
 stack< pair <int,int> > i;
@@ -270,6 +272,7 @@ while(!done)
     if (cpt==INT_MAX)
       {cpt=0;}
     i.pop();
+    
     
     _dist[x.first][x.second]=cpt;
     //cout  << "tab2 : " << _dist[x.first][x.second] << " data : " << (int)_data [x.first][x.second] <<endl;
@@ -330,6 +333,7 @@ while(!done)
     }
     
 }
+//--------------------------------------------------------------//
 
 
 
