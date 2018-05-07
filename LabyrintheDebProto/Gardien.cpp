@@ -245,14 +245,14 @@ void Gardien::update (void) {
 	bool cmort = false;
 	if (((int)_l -> _guards[0] -> _x/Environnement::scale)-ceil( _x/Environnement::scale ) == 0){
 		if (((int)_l -> _guards[0] -> _y/Environnement::scale)-ceil(_y/Environnement::scale) > 0){
-			for (int i = 0; i < ((int)_l -> _guards[0] -> _y/Environnement::scale)-ceil(_y/Environnement::scale); i++){
+			for (int i = 0; i < ((int)_l -> _guards[0] -> _y/Environnement::scale)-ceil(_y/Environnement::scale-1); i++){
 				if (reinterpret_cast<Labyrinthe*>(_l) -> data (ceil(_x/Environnement::scale)+i,ceil( _y/Environnement::scale)) == 1){
 					cmort = true;
 				}
 			}
 		}
 		else {
-			for (int i = 0; i > ((int)_l -> _guards[0] -> _y/Environnement::scale)-ceil(_y/Environnement::scale); i--){
+			for (int i = 0; i > ((int)_l -> _guards[0] -> _y/Environnement::scale)-ceil(_y/Environnement::scale+1); i--){
 				if (reinterpret_cast<Labyrinthe*>(_l) -> data (ceil(_x/Environnement::scale)+i,ceil( _y/Environnement::scale)) == 1){
 					cmort = true;
 				}
@@ -262,14 +262,14 @@ void Gardien::update (void) {
 
 	if (((int)_l -> _guards[0] -> _y/Environnement::scale)-ceil( _y/Environnement::scale ) == 0){
 		if (((int)_l -> _guards[0] -> _x/Environnement::scale)-ceil(_x/Environnement::scale) > 0){
-			for (int i = 0; i < ((int)_l -> _guards[0] -> _x/Environnement::scale)-ceil(_x/Environnement::scale); i++){
+			for (int i = 0; i < ((int)_l -> _guards[0] -> _x/Environnement::scale)-ceil(_x/Environnement::scale)-1; i++){
 				if (reinterpret_cast<Labyrinthe*>(_l) -> data (ceil(_x/Environnement::scale),ceil( _y/Environnement::scale)+i) == 1){
 					cmort = true;
 				}
 			}
 		}
 		else {
-			for (int i = 0; i > ((int)_l -> _guards[0] -> _x/Environnement::scale)-ceil(_x/Environnement::scale); i--){
+			for (int i = 0; i > ((int)_l -> _guards[0] -> _x/Environnement::scale)-ceil(_x/Environnement::scale)+1; i--){
 				if (reinterpret_cast<Labyrinthe*>(_l) -> data (ceil(_x/Environnement::scale),ceil( _y/Environnement::scale)+i) == 1){
 					cmort = true;
 				}
