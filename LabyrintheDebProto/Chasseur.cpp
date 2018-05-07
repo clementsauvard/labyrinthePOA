@@ -75,10 +75,8 @@ bool Chasseur::process_fireball (float dx, float dy)
             break;
         case 4:  
             message("UN GARDIEN");
-                cout << "x : " << xPos << " y : "<< yPos << endl;
             for (int i = 1; i < _l ->_nguards ; i++){
                 if (ceil(_l -> _guards[i] -> _x/Environnement::scale) == xPos && ceil(_l -> _guards[i] -> _y/Environnement::scale) == yPos){
-                    cout << "prout" << endl;
                      reinterpret_cast<Gardien*> (_l -> _guards[i]) -> glife = reinterpret_cast<Gardien*> (_l -> _guards[i]) -> glife - 1;
                      reinterpret_cast<Gardien*> (_l -> _guards[i]) -> isDead();
                 }
@@ -115,8 +113,7 @@ void Chasseur::fire (int angle_vertical)
     int p1 = ( ((rand() % 10) - 5)*((20-life))/20 );
     int p2 = ( ((rand() % 10) - 5)*((20-life))/20 );
     message ("I AM THE WHOOSH...  %d , %d",p1,life);
-    _hunter_fire -> play ();
-    //cout << _x << endl;
+    _hunter_fire -> play ();    
     _fb -> init (/* position initiale de la boule */ _x, _y, 10.,
                 /* angles de visée */ angle_vertical+p1, _angle+p2);
 }
