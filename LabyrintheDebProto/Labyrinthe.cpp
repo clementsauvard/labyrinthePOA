@@ -148,8 +148,14 @@ for(int i = 0; i < heightLab; i++)
           case ' ':
               waitFinMur = false;
               break;
-        //Affiche a
+           //Affiche a
 	     	   case 'a':
+                if (waitFinMur){
+                    affiches[nbAffiches] = {j, i, j+2,i,0};
+                    nbAffiches++;
+                }
+                break;
+           case 'b':
                 if (waitFinMur){
                     affiches[nbAffiches] = {j, i, j+2,i,0};
                     nbAffiches++;
@@ -212,12 +218,18 @@ for(int j = 0; j < widthLab; j++)
 	        case ' ':
 	         	waitFinMur = false;
 	         	break;
-	     	case 'a':
-	     	if (waitFinMur){
-	     		affiches[nbAffiches] = {j, i, j,i+2,0};
-	     		nbAffiches++;
-	     	}
-	     		break;
+  	     	case 'a':
+    	     	if (waitFinMur){
+    	     		affiches[nbAffiches] = {j, i, j,i+2,0};
+    	     		nbAffiches++;
+    	     	}
+  	     		break;
+          case 'b':
+            if (waitFinMur){
+              affiches[nbAffiches] = {j, i, j,i+2,0};
+              nbAffiches++;
+            }
+            break;
     	}
         
         if (waitFinMur)
