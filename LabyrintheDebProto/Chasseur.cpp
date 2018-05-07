@@ -1,5 +1,6 @@
 #include "Chasseur.h"
 #include "Gardien.h"
+#include "Labyrinthe.h"
 #include <stdlib.h>
 #include <iostream>
 #include <math.h>
@@ -11,7 +12,9 @@ using namespace std;
  */
 Chasseur::Chasseur (Labyrinthe* l) : Mover (100, 80, l, 0)
 {
-    life=20;
+    life=10;
+    toucheC = false;
+    waitLifeC = 300;
     _hunter_fire = new Sound ("sons/hunter_fire.wav");
     _hunter_hit = new Sound ("sons/hunter_hit.wav");
     if (_wall_hit == 0)
@@ -26,8 +29,20 @@ bool Chasseur::move_aux (double dx, double dy)
     if (EMPTY == _l -> data ((int)((_x + dx) / Environnement::scale),
                             (int)((_y + dy) / Environnement::scale)))
     {
+
+        if(reinterpret_cast<Labyrinthe*>(_l) -> data (ceil(_x/_l -> scale),ceil(_y/_l -> scale)) == 5 )
+        {
+            reinterpret_cast<Labyrinthe*>(_l) -> setData (ceil(_x/_l -> scale),ceil(_y/_l -> scale),0); 
+        }
+
         _x += dx;
         _y += dy;
+
+        if(reinterpret_cast<Labyrinthe*>(_l) -> data (ceil(_x/_l -> scale),ceil(_y/_l -> scale)) == 0 )
+        {
+            reinterpret_cast<Labyrinthe*>(_l) -> setData (ceil(_x/_l -> scale),ceil(_y/_l -> scale),5);
+        }
+
         return true;
     }
     return false;
@@ -81,6 +96,8 @@ bool Chasseur::process_fireball (float dx, float dy)
             for (int i = 1; i < _l ->_nguards ; i++){
                 if (ceil(_l -> _guards[i] -> _x/Environnement::scale) == xPos && ceil(_l -> _guards[i] -> _y/Environnement::scale) == yPos){
                      reinterpret_cast<Gardien*> (_l -> _guards[i]) -> glife = reinterpret_cast<Gardien*> (_l -> _guards[i]) -> glife - 1;
+                     reinterpret_cast<Gardien*> (_l -> _guards[i]) -> touche = true;
+                     reinterpret_cast<Gardien*> (_l -> _guards[i]) -> waitLife = 300;
                      reinterpret_cast<Gardien*> (_l -> _guards[i]) -> isDead();
                 }
             }
@@ -110,8 +127,8 @@ bool Chasseur::process_fireball (float dx, float dy)
 void Chasseur::fire (int angle_vertical)
 {
     // Calcul permettant de d�finir la pr�cision du tir selon la vie du gardien
-    int p1 = ( ((rand() % 10) - 5)*((20-life))/20 );
-    int p2 = ( ((rand() % 10) - 5)*((20-life))/20 );
+    int p1 = ( ((rand() % 10) - 5)*((10-life))/10 );
+    int p2 = ( ((rand() % 10) - 5)*((10-life))/10 );
     message ("I AM THE WHOOSH...  %d , %d",p1,life);
     _hunter_fire -> play ();
     _fb -> init (/* position initiale de la boule */ _x, _y, 10.,

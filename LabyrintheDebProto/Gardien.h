@@ -20,6 +20,8 @@ public:
 	//int rangeUp;
 	//int rangeDown;
 	bool alloc;
+	bool touche;
+	int waitLife;
 
 	// mon gardien pense tr�s mal!
 	void update (void);

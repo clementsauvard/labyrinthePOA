@@ -20,6 +20,8 @@ Gardien::Gardien (Labyrinthe* l,const char* modele) : Mover (100, 80, l, modele)
 	attaque = false;
 	//rangeDown = rand() % 20 + 10;
 	//rangeUp = rand() %  30 + 30;
+	touche = false;
+	waitLife = 300;
 }
 void Gardien::update (void) {
 		
@@ -28,8 +30,17 @@ void Gardien::update (void) {
 	int droite;
 	int bas;
 
+	int tempRange = 0;
+	for (int i = 0; i < _l -> width(); i++){
+		for (int j = 0; j < _l -> height(); j++){
+			if (reinterpret_cast<Labyrinthe*>(_l) -> dist(i,j) > tempRange){
+				tempRange = reinterpret_cast<Labyrinthe*>(_l) -> dist(i,j);
+			}
+		}
+	}
+
 	// Si le gardien est près du trésor, il passe en mode attaque
-	if (reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)) < 20){
+	if (reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)) < 15){
 
 		attaque = true;
 
@@ -140,7 +151,7 @@ void Gardien::update (void) {
 	}
 	// Si le gardien dépasse un certain seuil, ou qu'il s'est suffisament rapprocher du point qu'il lui a été indiqué en mode attaque
 	// Il revient en mode défense et se rapproche du trésor
-	else if (reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)) > 140 || (alloc && distToC(ceil(_x/_l -> scale),ceil(_y/_l -> scale)) < 2))
+	else if (reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)) > (tempRange - 40) || (alloc && distToC(ceil(_x/_l -> scale),ceil(_y/_l -> scale)) < 2))
 	{
 		attaque = false;
 	}
@@ -275,7 +286,43 @@ void Gardien::update (void) {
 	if (!wallMet && !mort ){
 		fire(0);
 	}
-		
+	
+	if (!mort){
+		if (!touche){
+			if (glife < 5){
+				glife++;
+				touche = true;
+				waitLife = 300;
+			}
+		}
+		else {
+			waitLife--;
+			if (waitLife == 0){
+				touche = false;
+			}
+		}
+	}
+
+	if (reinterpret_cast<Chasseur*> (_l -> _guards[0]) -> life != 0){
+		if (reinterpret_cast<Chasseur*> (_l -> _guards[0]) -> toucheC == false){
+			if (reinterpret_cast<Chasseur*> (_l -> _guards[0]) -> life < 10){
+				reinterpret_cast<Chasseur*> (_l -> _guards[0]) -> life++;
+				reinterpret_cast<Chasseur*> (_l -> _guards[0]) -> toucheC = true;
+				reinterpret_cast<Chasseur*> (_l -> _guards[0]) -> waitLifeC = 300;
+			}
+		}
+		else {
+			reinterpret_cast<Chasseur*> (_l -> _guards[0]) -> waitLifeC--;
+			if (reinterpret_cast<Chasseur*> (_l -> _guards[0]) -> waitLifeC == 0){
+				reinterpret_cast<Chasseur*> (_l -> _guards[0]) -> toucheC = false;
+			}
+		}
+	}
+	else if (reinterpret_cast<Chasseur*> (_l -> _guards[0]) -> life == 0){
+		exit(0);
+	}
+
+
 }
 
 bool Gardien::move (double dx, double dy) {
@@ -317,8 +364,15 @@ bool Gardien::process_fireball (float dx, float dy) {
             message("UN TRESOR");
             return false;
             break;
+        case 4:  
+            message("");
+            return true;
+            break;    
         case 5:
         	message("LE CHASSEUR");
+        	reinterpret_cast<Chasseur*> (_l -> _guards[0]) -> life = reinterpret_cast<Chasseur*> (_l -> _guards[0]) -> life - 1;
+        	reinterpret_cast<Chasseur*> (_l -> _guards[0]) -> toucheC = true;
+            reinterpret_cast<Chasseur*> (_l -> _guards[0]) -> waitLifeC = 300;
             return false;
             break;
          default:
