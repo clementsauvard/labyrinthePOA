@@ -28,12 +28,17 @@ void Gardien::update (void) {
 	int droite;
 	int bas;
 
+	// Si le gardien est près du trésor, il passe en mode attaque
 	if (reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)) < 20){
 
 		attaque = true;
 
+		// Voici comment nous avons implémenté le mode attaque : on crée un nouveau tableau résultant de notre algorithme de dikjstra
+		// et fabrique un chemin plus court non pas vers le trésor mais vers un point aléatoire du labyrinthe, le gardien va donc 
+		// si diriger et une fois qu'il dépassera un certain seuil, une certaine distance il revient en mode défense et se rapproche du trésor
+
+		//Définition du tableau
 		_distToC = (int**)malloc(sizeof(int*) * (_l -> width()));
-		 
 		for (int i = 0; i < _l -> width(); i++)
 		_distToC[i] = (int*)malloc(sizeof(int) * (_l -> height()));
 		alloc=true;
@@ -49,6 +54,7 @@ void Gardien::update (void) {
         int x1;
         int y1;
 		stack< pair <int,int> > i2;
+		//On choisit un point random de la map, tant que ce n'est pas un mur
 		while(!fini){
             x1 = rand() % _l -> width();
             y1 = rand() % _l -> height();
@@ -56,9 +62,7 @@ void Gardien::update (void) {
                 fini = true;
             }
         }
-        //cout << x1 << endl;
-        //cout << y1 << endl;
-
+        //dikjstra
 		i2.push(make_pair (x1,y1));
 		pair <int,int> x2;
 		while(!done)
@@ -73,14 +77,13 @@ void Gardien::update (void) {
 		      {cpt= min(cpt,_distToC[x2.first+1][x2.second]+1);}
 		    if(x2.first - 1 <= _l -> width() && _distToC[x2.first-1][x2.second] >-1 )
 		      {cpt= min(cpt,_distToC[x2.first-1][x2.second]+1);}
-		    //cout  << "X : " << x.second << " Y : " << x.first  << " tab : " << _dist[x.first][x.second] << " data : " << (int)_data [x.first][x.second] << "cpt : "<< cpt <<endl;
+		    
 		    if (cpt==INT_MAX)
 		      {cpt=0;}
 		    i2.pop();
 		    
 		    _distToC[x2.first][x2.second]=cpt;
-		    //cout  << "tab2 : " << _dist[x.first][x.second] << " data : " << (int)_data [x.first][x.second] <<endl;
-
+		    
 		    if((int) reinterpret_cast<Labyrinthe*>(_l) -> data (x2.first,x2.second+1) == 0 || (int) reinterpret_cast<Labyrinthe*>(_l) -> data (x2.first,x2.second+1) >= 4 ) {
 		        if(_distToC[x2.first][x2.second+1] == -1 || cpt+1 < _distToC[x2.first][x2.second+1]  )
 		        {
@@ -124,34 +127,34 @@ void Gardien::update (void) {
 		        }
 		    }
 
-		    //cout << "Le nombre d'éléments de la pile est : " << i.size() << endl;
-		    
+		   
 		    
 		    
 		    cpt++;
-		    if(i2.empty()  
-		       //|| i.size()>600
-		      ){
+		    if(i2.empty()){
 		        done=true;
 		    }
 		    
 		}
-
+		//fin dikjstra
 	}
+	// Si le gardien dépasse un certain seuil, ou qu'il s'est suffisament rapprocher du point qu'il lui a été indiqué en mode attaque
+	// Il revient en mode défense et se rapproche du trésor
 	else if (reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)) > 140 || (alloc && distToC(ceil(_x/_l -> scale),ceil(_y/_l -> scale)) < 2))
 	{
 		attaque = false;
 	}
 
-	//cout << "case dikstra : " << reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)) <<endl;
-	//cout << "x : " << ceil(_x/_l -> scale) << " y : " << ceil(_y/_l -> scale) << endl;
-	
+
+	// si le gardien est en mode défense, il regarde les cellules à sa gauche droite haut bas
+	// par rapport au tableau du plus court chemin ers le trésor
 	if (!attaque){
 		haut = reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale),ceil(_y/_l -> scale)-1);
 		gauche = reinterpret_cast<Labyrinthe*>(_l) -> dist(ceil(_x/_l -> scale)-1,ceil(_y/_l -> scale));
 		droite = reinterpret_cast<Labyrinthe*>(_l) -> dist(floor(_x/_l -> scale)+1,floor(_y/_l -> scale));
 		bas = reinterpret_cast<Labyrinthe*>(_l) -> dist(floor(_x/_l -> scale),floor(_y/_l -> scale)+1);
 	}
+	//sinon il regarde les cellules du plus court chemin vers le point désigné par le mode attaque
 	else {
 		haut = distToC(ceil(_x/_l -> scale),ceil(_y/_l -> scale)-1);
 		gauche = distToC(ceil(_x/_l -> scale)-1,ceil(_y/_l -> scale));
@@ -159,6 +162,7 @@ void Gardien::update (void) {
 		bas = distToC(ceil(_x/_l -> scale),ceil(_y/_l -> scale)+1);
 	}
 
+	//Si la cellule est un mur, accès impossible 
 	if (haut == -1){
 		haut = INT_MAX;
 	}
@@ -174,10 +178,10 @@ void Gardien::update (void) {
 
 	vector<pair<int,int> > tempDir;
 	
+	// On récupère la plus petite valeur des celulles
 	int temp = min(min(min(haut,gauche),droite),bas);
 	
-	//cout << " temp : " << temp << endl;
-
+	// Si plusieurs céllules possédent cette valeur minimal, on met dans le tableau tempDir les directions possibles
 	if (temp == haut && temp != 0 ){
 		tempDir.push_back(make_pair(0,-1));
 	}
@@ -190,35 +194,12 @@ void Gardien::update (void) {
 	if (temp == gauche && temp != 0 ){
 		tempDir.push_back(make_pair(-1,0));
 	}
-/*
-	for (int i = 0; i < tempDir.size(); i++){
-		cout << "x : " << tempDir[i].first << endl;
-		cout << "y : " << tempDir[i].second << endl;
-	}
-	*/
-	//cout << tempDir.size() << endl;
-	/*
-	if (tempDir.size() > 1){
 
-		int v2 = rand() % tempDir.size();
-		if (tempDir[v2].first == 1){
-			_angle = 270;
-		}
-		if (tempDir[v2].first == -1){
-			_angle = 90;
-		}
-		if (tempDir[v2].second == 1){
-			_angle = 0;
-		}
-		if (tempDir[v2].second == -1){
-			_angle = 180;
-		}
-		move(tempDir[v2].first,tempDir[v2].second);
-		
-	}*/
-	//cout << tempDir.size() << endl;
+	// Si il y a une ou plusieurs direction possible, on va toujours dans la direction
+	// contenu dans la première case du tableau, nous avons procédé comme cela au lieu de faire de l'aléatoire
+	// car nous avons remarqué que mettre de l'aléatoire dans ce cas provoquait des comportements bizarres
 	if (tempDir.size() >= 1){
-		
+		//Si le gardien n'est pas mort, on modifie l'angle de son modèle et on le déplace dans la direction indiqué
 		if (!mort){
 			if (tempDir[0].first == 1){
 				_angle = 270;
@@ -234,6 +215,7 @@ void Gardien::update (void) {
 			}
 			move(tempDir[0].first,tempDir[0].second);	
 		}
+		// SI le gardien est mort on l'enlève du tableau des collisions, pour plus qu'il ne dérange
 		else {
 			reinterpret_cast<Labyrinthe*>(_l) -> setData (ceil(_x/_l -> scale),ceil(_y/_l -> scale),0);
 		}
@@ -246,6 +228,9 @@ void Gardien::update (void) {
 	int xGarde = ceil( _x/Environnement::scale );
 	int yGarde = ceil( _y/Environnement::scale );
 
+	// Algorithme qui détecte si un gardien "voit" un chasseur
+	// si le gardien est sur une même ligne ou colonne que le chasseur et qu'aucun mur ne les sépare
+	// le gardien tire sur le chasseur
 	if ( (xChasseur - xGarde) == 0){
 		if ((yChasseur - yGarde) > 0){
 			for (int i = 0; i < (yChasseur - yGarde) ; i++){
@@ -286,7 +271,7 @@ void Gardien::update (void) {
 		}
 	}
 
-
+	// Si le gardien peut tirer sur le chasseur et qu'il n'est pas mort, il tire
 	if (!wallMet && !mort ){
 		fire(0);
 	}
@@ -294,21 +279,23 @@ void Gardien::update (void) {
 }
 
 bool Gardien::move (double dx, double dy) {
-		
-		if(reinterpret_cast<Labyrinthe*>(_l) -> data (ceil(_x/_l -> scale),ceil(_y/_l -> scale)) == 4 )
-		{
-			reinterpret_cast<Labyrinthe*>(_l) -> setData (ceil(_x/_l -> scale),ceil(_y/_l -> scale),0); 
-		}
-		//cout << (int) reinterpret_cast<Labyrinthe*>(_l) -> data (ceil(_x/_l -> scale)+dx,ceil(_y/_l -> scale)+dy) << endl;
+	
+	//La case actuel du gardien n'est plus dans le tableau des collisions	
+	if(reinterpret_cast<Labyrinthe*>(_l) -> data (ceil(_x/_l -> scale),ceil(_y/_l -> scale)) == 4 )
+	{
+		reinterpret_cast<Labyrinthe*>(_l) -> setData (ceil(_x/_l -> scale),ceil(_y/_l -> scale),0); 
+	}
 
-		_x += dx;
-		_y += dy;
-		if(reinterpret_cast<Labyrinthe*>(_l) -> data (ceil(_x/_l -> scale),ceil(_y/_l -> scale)) == 0 )
-		{
-			reinterpret_cast<Labyrinthe*>(_l) -> setData (ceil(_x/_l -> scale),ceil(_y/_l -> scale),4);
-		}
+	_x += dx;
+	_y += dy;
 
-		return true;
+	//la nouvelle position du gardien est mise dans le tableau des collisions
+	if(reinterpret_cast<Labyrinthe*>(_l) -> data (ceil(_x/_l -> scale),ceil(_y/_l -> scale)) == 0 )
+	{
+		reinterpret_cast<Labyrinthe*>(_l) -> setData (ceil(_x/_l -> scale),ceil(_y/_l -> scale),4);
+	}
+
+	return true;
 }
 
 
@@ -340,18 +327,14 @@ bool Gardien::process_fireball (float dx, float dy) {
 }
 void Gardien::fire (int angle_vertical) {
 	// Calcul permettant de définir la précision du tir selon la vie du gardien
-	int p1 = ( ((rand() % 10) - 5)*((20-glife))/20 );
-    int p2 = ( ((rand() % 10) - 5)*((20-glife))/20 );
+	int p1 = ( ((rand() % 10) - 5)*((5-glife))/5 );
+    //int p2 = ( ((rand() % 10) - 5)*((5-glife))/5 );
 
 	auto posxC = (_l -> _guards[0] -> _x)/ Environnement::scale;
 	auto posyC = (_l -> _guards[0] -> _y)/ Environnement::scale;
 
-	//cout << posxC << endl;
-	//cout << _x/Environnement::scale << endl;
-
 	auto angleTir = ceil(atan2(( posxC-_x/Environnement::scale ),(posyC-_y/Environnement::scale ) ) * 180 / M_PI);
 
-	//cout << angleTir << "fdp"<< endl;
     _fb -> init (/* position initiale de la boule */ _x, _y, 10.,
                 /* angles de visée */ 0, angleTir+p1);
 }
@@ -359,7 +342,6 @@ void Gardien::fire (int angle_vertical) {
 void Gardien::isDead () {
 	// Si le gardien est mort on le laisse au sol
 	if (glife <= 0) {
-		cout << "t'es mort lel" << endl;
 		mort = true;
 		rester_au_sol();
 	}

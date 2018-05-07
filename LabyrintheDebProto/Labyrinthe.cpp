@@ -28,7 +28,6 @@ Environnement* Environnement::init (char* filename)
 
 Labyrinthe::Labyrinthe (char* filename)
 {
-  cout << "1  " << endl;
   //Variables
   string line;
   int widthLab = 0;
@@ -52,10 +51,6 @@ Labyrinthe::Labyrinthe (char* filename)
   int nbAffiches = 0;
   int nbCaisses = 0;
   int nbGuards = 1;
-
-
-
-  cout << "2  " << endl;
 
 
   // Ouverture du fichier
@@ -101,8 +96,6 @@ _data[i] = (char*)malloc(sizeof(char) * heightLab);
 //Initialisation d'un tableau 2D
 char labyTab[heightLab][widthLab];
 
-cout << "size h:"<< heightLab <<" et w:" << widthLab << endl;
-
 //Parcours du fichier et copie du labrinthe dans le tableau 2D
 ifstream myfile2 (filename);
   if (myfile2.is_open())
@@ -119,7 +112,6 @@ ifstream myfile2 (filename);
 	      }
 	   }
 	   if (boolCompteur2){
-      cout << "size3 h:"<< heightLab <<" et w:" << widthLab << endl;
     	for(std::string::size_type i = 0; i < line.length(); ++i)
 		   {
 		   	 labyTab[startCompteur2][i] = line[i];
@@ -196,7 +188,6 @@ for(int i = 0; i < heightLab; i++)
 	}
 	waitFinMur=false;
 }
-cout << "5  " << endl;
 // 2eme boucle pour la création des murs verticaux et affiches
 for(int j = 0; j < widthLab; j++)
 {
@@ -268,15 +259,12 @@ while(!done)
       {cpt= min(cpt,_dist[x.first+1][x.second]+1);}
     if(x.first - 1 <= widthLab && _dist[x.first-1][x.second] >-1 )
       {cpt= min(cpt,_dist[x.first-1][x.second]+1);}
-    //cout  << "X : " << x.second << " Y : " << x.first  << " tab : " << _dist[x.first][x.second] << " data : " << (int)_data [x.first][x.second] << "cpt : "<< cpt <<endl;
     if (cpt==INT_MAX)
       {cpt=0;}
     i.pop();
     
     
-    _dist[x.first][x.second]=cpt;
-    //cout  << "tab2 : " << _dist[x.first][x.second] << " data : " << (int)_data [x.first][x.second] <<endl;
-    
+    _dist[x.first][x.second]=cpt;  
 
     if((int)_data [x.first][x.second+1] == 0 || (int)_data [x.first][x.second+1] >= 4 ) {
         if(_dist[x.first][x.second+1] == -1 || cpt+1 < _dist[x.first][x.second+1]  )
@@ -320,15 +308,11 @@ while(!done)
             }
         }
     }
-
-    //cout << "Le nombre d'éléments de la pile est : " << i.size() << endl;
     
     
     
     cpt++;
-    if(i.empty()  
-       //|| i.size()>600
-      ){
+    if(i.empty()){
         done=true;
     }
     
@@ -337,22 +321,8 @@ while(!done)
 
 
 
-cout << "7  " << endl;
-for(int j = 0; j < heightLab; j++)
-{
-    for (int i = 0; i < widthLab; i++){
-        
-        if (_dist[i][j]== -1){cout << "##";}
-        else{ 
-            if(_dist[i][j]== 0){cout << "O ";}
-            else {if(_dist[i][j]< 10){cout <<  _dist[i][j]<<" " ;}
-            else {cout <<  _dist[i][j] ;}}}
-        
-        //cout <<(int)_data [i][j];
-    }
-    cout << endl;
-}
-	_nwall = nbWalls;
+
+	 _nwall = nbWalls;
     _walls = walls;
 
     _nboxes = nbCaisses;
@@ -363,68 +333,4 @@ for(int j = 0; j < heightLab; j++)
 
     _nguards = nbGuards++;
     
-
-/*
-// les 4 murs.
-	static Wall walls [] = {
-		{ 0, 0, LAB_WIDTH-1, 0, 0 },
-		{ LAB_WIDTH-1, 0, LAB_WIDTH-1, LAB_HEIGHT-1, 0 },
-		{ LAB_WIDTH-1, LAB_HEIGHT-1, 0, LAB_HEIGHT-1, 0 },
-		{ 0, LAB_HEIGHT-1, 0, 0, 0 },
-	};
-	// une affiche.
-	//  (attention: pour des raisons de rapport d'aspect, les affiches doivent faire 2 de long)
-	static Wall affiche [] = {
-		{ 4, 0, 6, 0, 0 },		// première affiche.
-		{ 8, 0, 10, 0, 0 },		// autre affiche.
-	};
-	// 3 caisses.
-	static Box	caisses [] = {
-		{ 70, 12, 0 },
-		{ 10, 5, 0 },
-		{ 65, 22, 0 },
-	};
-	// juste un mur autour et les 3 caisses et le trésor dedans.
-	for (int i = 0; i < LAB_WIDTH; ++i)
-		for (int j = 0; j < LAB_HEIGHT; ++j) {
-			if (i == 0 || i == LAB_WIDTH-1 || j == 0 || j == LAB_HEIGHT-1)
-				_data [i][j] = 1;
-			else
-				_data [i][j] = EMPTY;
-		}
-	// indiquer qu'on ne marche pas sur une caisse.
-	_data [caisses [0]._x][caisses [0]._y] = 1;
-	_data [caisses [1]._x][caisses [1]._y] = 1;
-	_data [caisses [2]._x][caisses [2]._y] = 1;
-	// les 4 murs.
-	_nwall = 5;
-	_walls = walls;
-	// deux affiches.
-	_npicts = 2;
-	_picts = affiche;
-	// la deuxième à une texture différente.
-	char	tmp [128];
-	sprintf (tmp, "%s/%s", texture_dir, "voiture.jpg");
-	_picts [1]._ntex = wall_texture (tmp);
-	// 3 caisses.
-	_nboxes = 3;
-	_boxes = caisses;
-	// le trésor.
-	_treasor._x = 10;
-	_treasor._y = 10;
-	_data [_treasor._x][_treasor._y] = 1;	// indiquer qu'on ne marche pas sur le trésor.
-	// le chasseur et les 4 gardiens.
-	_nguards = 5;
-	_guards = new Mover* [_nguards];
-	_guards [0] = new Chasseur (this);
-	_guards [1] = new Gardien (this, "drfreak");
-	_guards [2] = new Gardien (this, "Marvin"); _guards [2] -> _x = 90.; _guards [2] -> _y = 70.;
-	_guards [3] = new Gardien (this, "Potator"); _guards [3] -> _x = 60.; _guards [3] -> _y = 10.;
-	_guards [4] = new Gardien (this, "garde"); _guards [4] -> _x = 130.; _guards [4] -> _y = 100.;
-	// indiquer qu'on ne marche pas sur les gardiens.
-	_data [(int)(_guards [1] -> _x / scale)][(int)(_guards [1] -> _y / scale)] = 1;
-	_data [(int)(_guards [2] -> _x / scale)][(int)(_guards [2] -> _y / scale)] = 1;
-	_data [(int)(_guards [3] -> _x / scale)][(int)(_guards [3] -> _y / scale)] = 1;
-	_data [(int)(_guards [4] -> _x / scale)][(int)(_guards [4] -> _y / scale)] = 1;
-*/
 }

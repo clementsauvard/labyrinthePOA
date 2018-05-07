@@ -17,8 +17,8 @@ public:
 	int glife; // Vie du gardien
 	bool mort; // Gardien mort ou en vie
 	bool attaque; // true = mode attaque , false = mode défense
-	int rangeUp;
-	int rangeDown;
+	//int rangeUp;
+	//int rangeDown;
 	bool alloc;
 
 	// mon gardien pense trï¿½s mal!
