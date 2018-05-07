@@ -288,7 +288,7 @@ void Gardien::update (void) {
 	}
 
 
-	if (!wallMet  ){
+	if (!wallMet && !mort ){
 		fire(0);
 	}
 		
