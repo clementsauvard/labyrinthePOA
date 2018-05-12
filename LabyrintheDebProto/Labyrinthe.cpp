@@ -7,11 +7,10 @@
 #include <vector>
 #include <iterator>
 #include <stack>
+#include <regex>
 
 #include <limits.h>
 #include <malloc.h>
-
-using namespace std;
 
 using namespace std;
 
@@ -30,28 +29,36 @@ Labyrinthe::Labyrinthe (char* filename)
 {
   //Variables
   string line;
+  //Hauteur et Largeur du laby
   int widthLab = 0;
   int heightLab = 0;
+  // Variable pour le calcul de la hauteur et de la largeur
   bool firstLigne = false;
   bool boolCompteur2 = false;
+  // Variable pour création d'un laby dans un tableau 2D
   int startCompteur2 = 0;
   int startLaby = 0;
 
-  int x2Mur;
-  int y2Mur;
-  bool waitFinMur = false;
+  int x2Mur; // Position x d'un mur
+  int y2Mur; // Position y d'un mur
+  bool waitFinMur = false; // Mur fini ou pas
 
   static Wall walls[100]; //murs
   static Box caisses[20]; //caisses
-  static Wall affiches[20];
+  static Wall affiches[20]; // affiches
 
-  _guards = new Mover* [100];
+  _guards = new Mover* [100]; // gardiens et chasseur
 
   int nbWalls = 0;
   int nbAffiches = 0;
   int nbCaisses = 0;
   int nbGuards = 1;
 
+  // tableau contenant une paire (lettre de l'affiche / chemin de la texture)
+  vector<pair<char,int>> vecAffiche; 
+
+  // Expression régulière reconnaissant les paramètres concernant les affiches dans le labyrinthe
+  regex regAffiche("^\\s*([a-z])\\s*([^\\s]+)\\s*$"); 
 
   // Ouverture du fichier
   ifstream myfile (filename);
@@ -61,6 +68,27 @@ Labyrinthe::Labyrinthe (char* filename)
     {
       getline (myfile,line);
       heightLab++;
+
+      auto commentaire = line.find('#');
+
+      string line_clean ( line.begin()
+      , commentaire == string::npos //  Si '#' non trouve
+        ? line.end()              //  on sauvegarde toute la ligne
+        : line.begin() + commentaire  //  On retire le commentaire de la ligne
+    );
+
+      smatch match;
+
+      // Condition si la ligne match l'expression régulière, on récupère 
+      // a l'index 2 de l'expression régulière le chemin de la texture de l'affiche
+      // puis à l'index 1 de l'expression réguliere le caractere correspondant
+      // puis on les ajoute au tableau vecAffiche
+      if (regex_match(line_clean, match, regAffiche)){
+        string test = match[2];
+        char* str = (char *)alloca(test.size() + 1);
+        memcpy(str, test.c_str(), test.size() + 1);
+        vecAffiche.push_back(make_pair(match[1].str()[0],wall_texture(str)));
+      }
 
       // Recuperation de la largeur du labyrinthe
       if (line.length() > widthLab){
@@ -127,6 +155,18 @@ for(int i = 0; i < heightLab; i++)
 	for (int j = 0; j < widthLab; j++){
         _data [j][i] = 0;        
         char c = labyTab[i][j];
+
+        // Parmis les caracteres du tableau vecAffiche, si on trouve le même dans le labyrinthe
+        // On affiche la texture
+        for (pair<char,int> x : vecAffiche){
+            if (c == x.first){
+              if (waitFinMur){
+                    affiches[nbAffiches] = {j, i, j+2,i,x.second};
+                    nbAffiches++;
+                }
+            }
+        }
+
   		switch ( c )  
         {  
           //Début de mur
@@ -148,19 +188,6 @@ for(int i = 0; i < heightLab; i++)
           case ' ':
               waitFinMur = false;
               break;
-           //Affiche a
-	     	   case 'a':
-                if (waitFinMur){
-                    affiches[nbAffiches] = {j, i, j+2,i,0};
-                    nbAffiches++;
-                }
-                break;
-           case 'b':
-                if (waitFinMur){
-                    affiches[nbAffiches] = {j, i, j+2,i,0};
-                    nbAffiches++;
-                }
-                break;
            //Une caisse
 	     	   case 'x':
                 _data [j][i] = 2;
@@ -199,10 +226,21 @@ for(int j = 0; j < widthLab; j++)
 {
 	for (int i = 0; i < heightLab; i++){
   		char c = labyTab[i][j];
-        
+
+      // Parmis les caracteres du tableau vecAffiche, si on trouve le même dans le labyrinthe
+        // On affiche la texture
+      for (pair<char,int> x : vecAffiche){
+            if (c == x.first){
+                if (waitFinMur){
+                affiches[nbAffiches] = {j, i, j,i+2,x.second};
+                nbAffiches++;
+              }
+            }
+        }
     
   		switch ( c )  
     	{  
+          // un mur
         	case '+':
 	    		if (waitFinMur){
 		    	    walls[nbWalls] = {j,i,x2Mur,y2Mur,0};
@@ -218,18 +256,6 @@ for(int j = 0; j < widthLab; j++)
 	        case ' ':
 	         	waitFinMur = false;
 	         	break;
-  	     	case 'a':
-    	     	if (waitFinMur){
-    	     		affiches[nbAffiches] = {j, i, j,i+2,0};
-    	     		nbAffiches++;
-    	     	}
-  	     		break;
-          case 'b':
-            if (waitFinMur){
-              affiches[nbAffiches] = {j, i, j,i+2,0};
-              nbAffiches++;
-            }
-            break;
     	}
         
         if (waitFinMur)
@@ -254,13 +280,15 @@ for(int j = 0; j < widthLab; j++)
 //----------------------------- Dikjstra -----------------------------
 bool done=false;
 int cpt=0;
+//Création d'une pile
 stack< pair <int,int> > i;
+// on met dans la pile la position du trésor
 i.push(make_pair (_treasor._x,_treasor._y));
     pair <int,int> x;
 while(!done)
 {
 
-
+    // On va regarder chaque coté de la position présente dans la pile
     x=i.top();
     cpt=INT_MAX;
     if(x.second + 1 <= heightLab && _dist[x.first][x.second+1] >-1 )
@@ -275,9 +303,10 @@ while(!done)
       {cpt=0;}
     i.pop();
     
-    
+    // On remplit le tableau _dist avec les valeurs résultant de dikjstra
     _dist[x.first][x.second]=cpt;  
 
+    //On effectue dikjstra tant qu'il reste une valeur à attribuer à une position
     if((int)_data [x.first][x.second+1] == 0 || (int)_data [x.first][x.second+1] >= 4 ) {
         if(_dist[x.first][x.second+1] == -1 || cpt+1 < _dist[x.first][x.second+1]  )
         {
@@ -332,9 +361,9 @@ while(!done)
 //--------------------------------------------------------------//
 
 
+    // On sauvegarde les paramètres
 
-
-	 _nwall = nbWalls;
+	  _nwall = nbWalls;
     _walls = walls;
 
     _nboxes = nbCaisses;

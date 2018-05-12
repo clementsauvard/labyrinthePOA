@@ -83,8 +83,8 @@ bool Chasseur::process_fireball (float dx, float dy)
             break;
         case 3:  
             message("UN TRESOR");
-            // exit(0) vous avez gagnez
-            exit(0);
+            // vous avez gagnez
+            partie_terminee(true);
             dmax2 = (_l -> width ())*(_l -> width ()) + (_l -> height ())*(_l -> height ());
             _wall_hit -> play (1. - dist2/dmax2);
             //_l -> partie_terminee(true);
@@ -96,6 +96,8 @@ bool Chasseur::process_fireball (float dx, float dy)
             for (int i = 1; i < _l ->_nguards ; i++){
                 if (ceil(_l -> _guards[i] -> _x/Environnement::scale) == xPos && ceil(_l -> _guards[i] -> _y/Environnement::scale) == yPos){
                      reinterpret_cast<Gardien*> (_l -> _guards[i]) -> glife = reinterpret_cast<Gardien*> (_l -> _guards[i]) -> glife - 1;
+                     cout << "Gardien hit ! Vie du gardien : " << reinterpret_cast<Gardien*> (_l -> _guards[i]) -> glife << endl;
+                     // Le garien a été touché, on reset le timer de récupération de vie
                      reinterpret_cast<Gardien*> (_l -> _guards[i]) -> touche = true;
                      reinterpret_cast<Gardien*> (_l -> _guards[i]) -> waitLife = 300;
                      reinterpret_cast<Gardien*> (_l -> _guards[i]) -> isDead();
@@ -104,6 +106,9 @@ bool Chasseur::process_fireball (float dx, float dy)
             dmax2 = (_l -> width ())*(_l -> width ()) + (_l -> height ())*(_l -> height ());  
             _wall_hit -> play (1. - dist2/dmax2);
             return false;
+            break;
+        case 5:
+            return true;
             break;
          default:  
             message("");

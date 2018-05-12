@@ -18,10 +18,9 @@ Gardien::Gardien (Labyrinthe* l,const char* modele) : Mover (100, 80, l, modele)
 	mort = false;
 	alloc=false;
 	attaque = false;
-	//rangeDown = rand() % 20 + 10;
-	//rangeUp = rand() %  30 + 30;
 	touche = false;
-	waitLife = 300;
+	waitLife = 300 * _l -> _nguards;
+	tir = false;
 }
 void Gardien::update (void) {
 		
@@ -30,6 +29,7 @@ void Gardien::update (void) {
 	int droite;
 	int bas;
 
+	// Trouve la plus grande valeur (distance) dans le tableau de dikjstra dist
 	int tempRange = 0;
 	for (int i = 0; i < _l -> width(); i++){
 		for (int j = 0; j < _l -> height(); j++){
@@ -283,10 +283,14 @@ void Gardien::update (void) {
 	}
 
 	// Si le gardien peut tirer sur le chasseur et qu'il n'est pas mort, il tire
-	if (!wallMet && !mort ){
+	if (!wallMet && !mort && !tir){
 		fire(0);
+		tir = true;
 	}
 	
+	// Processus de régénération de vie pour les gardiens
+	// Si ils ont moins de vie que leur maximum de vie et qu'ils n'ont pas été récemment touché
+	// ils gagneront un point de vie au bout de quelques secondes
 	if (!mort){
 		if (!touche){
 			if (glife < 5){
@@ -303,12 +307,15 @@ void Gardien::update (void) {
 		}
 	}
 
-	if (reinterpret_cast<Chasseur*> (_l -> _guards[0]) -> life != 0){
+	// Processus de régénération de vie pour le Chasseur
+	// Si il a moins de vie que son maximum de vie et qu'il n'a pas été récemment touché
+	// il gagnera un point de vie au bout de quelques secondes
+	if (reinterpret_cast<Chasseur*> (_l -> _guards[0]) -> life > 0){
 		if (reinterpret_cast<Chasseur*> (_l -> _guards[0]) -> toucheC == false){
 			if (reinterpret_cast<Chasseur*> (_l -> _guards[0]) -> life < 10){
 				reinterpret_cast<Chasseur*> (_l -> _guards[0]) -> life++;
 				reinterpret_cast<Chasseur*> (_l -> _guards[0]) -> toucheC = true;
-				reinterpret_cast<Chasseur*> (_l -> _guards[0]) -> waitLifeC = 300;
+				reinterpret_cast<Chasseur*> (_l -> _guards[0]) -> waitLifeC = 300 * _l -> _nguards;
 			}
 		}
 		else {
@@ -318,8 +325,9 @@ void Gardien::update (void) {
 			}
 		}
 	}
-	else if (reinterpret_cast<Chasseur*> (_l -> _guards[0]) -> life == 0){
-		exit(0);
+	// Si le chasseur meurt GAME OVER
+	else if (reinterpret_cast<Chasseur*> (_l -> _guards[0]) -> life <= 0){
+		partie_terminee(false);
 	}
 
 
@@ -354,14 +362,17 @@ bool Gardien::process_fireball (float dx, float dy) {
             return true;  
             break;  
         case 1:
+        	tir = false;
             return false;
             break;
         case 2:
             message("UNE CAISSE");
+            tir = false;
             return false;
             break;
         case 3:  
             message("UN TRESOR");
+            tir = false;
             return false;
             break;
         case 4:  
@@ -370,12 +381,16 @@ bool Gardien::process_fireball (float dx, float dy) {
             break;    
         case 5:
         	message("LE CHASSEUR");
+        	tir = false;
+        	// Le chasseur a été touché, on reset le timer de récupération de vie
         	reinterpret_cast<Chasseur*> (_l -> _guards[0]) -> life = reinterpret_cast<Chasseur*> (_l -> _guards[0]) -> life - 1;
+        	cout << "Chasseur toucher ! Vie du Chasseur : " << reinterpret_cast<Chasseur*> (_l -> _guards[0]) -> life << endl;
         	reinterpret_cast<Chasseur*> (_l -> _guards[0]) -> toucheC = true;
-            reinterpret_cast<Chasseur*> (_l -> _guards[0]) -> waitLifeC = 300;
+            reinterpret_cast<Chasseur*> (_l -> _guards[0]) -> waitLifeC = 300 * _l -> _nguards;
             return false;
             break;
          default:
+         	tir = false;
             return false;
     }
 }

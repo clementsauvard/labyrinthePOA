@@ -17,11 +17,10 @@ public:
 	int glife; // Vie du gardien
 	bool mort; // Gardien mort ou en vie
 	bool attaque; // true = mode attaque , false = mode défense
-	//int rangeUp;
-	//int rangeDown;
 	bool alloc;
 	bool touche;
-	int waitLife;
+	int waitLife; //Temps d'attente pour récupérer de la vie
+	bool tir; // une boule de feu est présente
 
 	// mon gardien pense trï¿½s mal!
 	void update (void);
