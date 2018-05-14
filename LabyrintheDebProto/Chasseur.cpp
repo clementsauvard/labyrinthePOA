@@ -30,6 +30,7 @@ bool Chasseur::move_aux (double dx, double dy)
                             (int)((_y + dy) / Environnement::scale)))
     {
 
+        // On met a jour dans le tableau des collisions la nouvelle position du chasseur après un mouvement //
         if(reinterpret_cast<Labyrinthe*>(_l) -> data (ceil(_x/_l -> scale),ceil(_y/_l -> scale)) == 5 )
         {
             reinterpret_cast<Labyrinthe*>(_l) -> setData (ceil(_x/_l -> scale),ceil(_y/_l -> scale),0); 
@@ -42,7 +43,7 @@ bool Chasseur::move_aux (double dx, double dy)
         {
             reinterpret_cast<Labyrinthe*>(_l) -> setData (ceil(_x/_l -> scale),ceil(_y/_l -> scale),5);
         }
-
+        //------------------
         return true;
     }
     return false;
@@ -58,11 +59,12 @@ bool Chasseur::process_fireball (float dx, float dy)
     float   y = (_y - _fb -> get_y ()) / Environnement::scale;
     float   dist2 = x*x + y*y;
     float   dmax2;
-    // on bouge que dans le vide!
+
+    // On sauvegarde la position de la boule
     auto xPos = (int)((_fb -> get_x () + dx) / Environnement::scale);
     auto yPos = (int)((_fb -> get_y () + dy) / Environnement::scale);
 
-    //On regarde la case oï¿½ est la boule
+    //On regarde la case ou est la boule
     switch ( _l -> data ((int)((_fb -> get_x () + dx) / Environnement::scale),(int)((_fb -> get_y () + dy) / Environnement::scale)) )  
     {
         case EMPTY: 
@@ -92,7 +94,7 @@ bool Chasseur::process_fireball (float dx, float dy)
             break;
         case 4:  
             message("UN GARDIEN");
-            //On regarde quel gardien on a touchï¿½ et on dï¿½crï¿½mente sa vie de 1, et on check si il est mort
+            //On regarde quel gardien on a touche et on decremente sa vie de 1, et on check si il est mort
             for (int i = 1; i < _l ->_nguards ; i++){
                 if (ceil(_l -> _guards[i] -> _x/Environnement::scale) == xPos && ceil(_l -> _guards[i] -> _y/Environnement::scale) == yPos){
                      reinterpret_cast<Gardien*> (_l -> _guards[i]) -> glife = reinterpret_cast<Gardien*> (_l -> _guards[i]) -> glife - 1;
@@ -116,14 +118,6 @@ bool Chasseur::process_fireball (float dx, float dy)
             _wall_hit -> play (1. - dist2/dmax2);
             return false;
     }
-    // collision...
-    // calculer la distance maximum en ligne droite.
-    
-    // faire exploser la boule de feu avec un bruit fonction de la distance.
-    
-//    life--;
-    
-    //message ("Booom...");
 
 }
 /*
@@ -137,5 +131,5 @@ void Chasseur::fire (int angle_vertical)
     message ("I AM THE WHOOSH...  %d , %d",p1,life);
     _hunter_fire -> play ();
     _fb -> init (/* position initiale de la boule */ _x, _y, 10.,
-                /* angles de visï¿½e */ angle_vertical+p1, _angle+p2);
+                /* angles de visee */ angle_vertical+p1, _angle+p2);
 }

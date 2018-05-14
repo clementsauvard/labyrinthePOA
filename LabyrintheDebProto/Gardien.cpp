@@ -1,3 +1,5 @@
+// Code des gardiens, contient l'IA des gardiens ainsi que le processus de régénération de vie des gardiens et du chasseur
+
 #include "Chasseur.h"
 #include "Gardien.h"
 #include "Labyrinthe.h"
@@ -24,6 +26,7 @@ Gardien::Gardien (Labyrinthe* l,const char* modele) : Mover (100, 80, l, modele)
 }
 void Gardien::update (void) {
 		
+	// Position haut bas droite gauche par rapport au gardien	
 	int haut;
 	int gauche;
 	int droite;
